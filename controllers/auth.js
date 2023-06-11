@@ -15,7 +15,6 @@ async function createUser(req, res) {
     } = req.body;
 
     let userExists = await userModel.getUsers({ email });
-    console.log("hi",userExists);
 
     if (userExists) {
       return res.status(409).send({
@@ -23,16 +22,6 @@ async function createUser(req, res) {
         message: "User with an email already exist",
       });
     }
-    // // const phoneRegex = /^\+[1-9]\d{1,14}$/;
-    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-   
-
-    // if (!emailRegex.test({ email })) {
-    //   console.log(emailRegex.test({email}))
-    //   res.status(422).send("Invalid Email or Contact");
-    //   return ("Credential did not passed Regex")
-    // }
 
     let userCreated = await userModel.createUser({
       userName,
@@ -48,7 +37,6 @@ async function createUser(req, res) {
     res.status(200).send({
       success: true,
       message: "User created successfully",
-      data: { userId: userCreated[0]?._id },
     });
   } catch (error) {
     console.log(error.message);

@@ -27,7 +27,5 @@ const createAndSendToken = (data, statusCode, res) => {
 };
 
 module.exports = {
-//   protect,
-//   restrictTo,
   createAndSendToken,
 };
