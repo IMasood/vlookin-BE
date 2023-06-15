@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 
 // Define the schema
-const dataSchema = new mongoose.Schema({
+const tenantSchema = new mongoose.Schema({
   tenantName: {
     type: String,
     required: true,
@@ -28,10 +28,10 @@ const dataSchema = new mongoose.Schema({
     type: String,
   },
 },
-{timeStamps: true}
+{timestamps: true}
 );
 
 
 // Create and export the model
-const DataModel = mongoose.models.dataSchema || mongoose.model("DataModel", dataSchema);
-module.exports = DataModel;
+const TenantModel = mongoose.models.tenantSchema || mongoose.model("TenantModel", tenantSchema);
+module.exports = TenantModel;

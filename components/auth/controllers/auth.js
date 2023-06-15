@@ -1,5 +1,5 @@
-const userModel = require("../dal/user");
-const auth = require("../middleware/authMiddleware");
+const userModel = require("../../users/dal/userModel");
+const auth = require("../../../middleware/authMiddleware");
 
 async function createUser(req, res) {
   try {

@@ -22,13 +22,10 @@ async function createUser({
       gender,
     });
     console.log(create);
-    return {
-      status: 200,
-      message: "User created Successfully",
-    };
+    return (create);
   } catch (err) {
     console.log("User creation failed", err.message);
-    return { message: err.message };
+    return ("err:",{ message: err.message });
   }
 }
 

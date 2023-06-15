@@ -1,4 +1,4 @@
-let Data = require("../models/data");
+let Tenant = require("../model/tenantSchema");
 
 async function create({
   tenantName,
@@ -11,7 +11,7 @@ async function create({
 }) {
   try {
     console.log("In POST DAL", email);
-    let addTenant = await Data.create({
+    let addTenant = await Tenant.create({
       tenantName,
       email,
       buildingName,
@@ -35,7 +35,7 @@ async function create({
 
 async function getData() {
   try {
-    let data = await Data.find();
+    let data = await Tenant.find();
     return {
       status: 200,
       data: data,
