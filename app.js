@@ -2,8 +2,10 @@ const express = require("express");
 const config = require("./config_files/db_config");
 const app = express();
 
-var authRouter = require("./components/auth/routes/auth");
-var tenantRouter = require("./components/tenant/routes/tenant");
+var authRouter = require("./components/auth/routes");
+var tenantRouter = require("./components/tenant/routes");
+var visitorRouter = require("./components/visitors/routes");
+var userRouter = require("./components/users/routes")
 
 var cors = require("cors");
 
@@ -12,6 +14,8 @@ app.use(cors());
 // Define routes and middleware here
 app.use("/tenant", tenantRouter);
 app.use("/auth", authRouter);
+app.use("/visitor", visitorRouter);
+app.use("/user", userRouter);
 config.connectDatabase();
 const port = 4000; // Set the port number you want to use
 

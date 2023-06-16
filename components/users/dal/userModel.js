@@ -9,6 +9,7 @@ async function createUser({
   allowSubUsers,
   allowMultipleBuildings,
   gender,
+  userId,
 }) {
   try {
     let create = await User.create({
@@ -20,28 +21,40 @@ async function createUser({
       allowSubUsers,
       allowMultipleBuildings,
       gender,
+      userId,
     });
     console.log(create);
-    return (create);
+    return create;
   } catch (err) {
     console.log("User creation failed", err.message);
-    return ("err:",{ message: err.message });
+    return "err:", { message: err.message };
   }
 }
 
-async function getUsers({ id, email }) {
+async function getUsers({ id, email, role, name }) {
   try {
+    console.log("in userMOdels");
     let user = null;
+    let searchParams = {};
     if (id) {
-      user = await User.findOne({ id });
+      searchParams._id = id;
     }
     if (email) {
-      user = await User.findOne({ email });
-      console.log(user);
-    } else {
-      user = await User.find();
+      searchParams.email = email;
     }
-    return user;
+    if (role) {
+      searchParams.role = role;
+    }
+    if (name) {
+      searchParams.userName = name;
+    }
+    user = await User.find(searchParams);
+    console.log(searchParams, user);
+      if(user.length ==1){
+        return user[0];
+      } else {
+        return user
+      }
   } catch (err) {
     console.log(err.status);
     return {
