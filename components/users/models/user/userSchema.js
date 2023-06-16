@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema(
       unique: true
     },
   },
-  { timeStamps: true }
+  { timestamps: true }
 );
 
 //If password changes hash it before updating the document
