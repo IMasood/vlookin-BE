@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/repositories/vlookin-BE
+    - /bin/cp app.js $DEPLOYPATH
