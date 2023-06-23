@@ -1,7 +1,9 @@
 const Visitor = require("./visitorSchema.js");
 
 async function createVisit({
-  visitorId,
+  visitorName,
+  email,
+  contact,
   visitDate,
   buildingName,
   flatNo,
@@ -11,7 +13,9 @@ async function createVisit({
 }) {
   try {
     let newVisit = await Visitor.create({
-      visitorId,
+      visitorName,
+      email,
+      contact,
       visitDate,
       buildingName,
       flatNo,
@@ -30,14 +34,14 @@ async function createVisit({
   }
 }
 
-async function getVisit({ id, visitorId }) {
+async function getVisit({ id, visitorName, page, limit }) {
   try {
-    let where={};
+    let where = {};
     if (id) {
       where._id = id;
     }
-    if (visitorId) {
-      where.visitorId = visitorId;
+    if (visitorName) {
+      where.visitorName = visitorName;
     }
     console.log(where);
     let visitorData = await Visitor.find(where);
