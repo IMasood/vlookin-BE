@@ -1,10 +1,13 @@
 var visitorModel = require("./visitorModel");
+const moment = require ('moment')
 
 async function createVisit(req, res) {
   try {
     let {
-      visitorId,
-      visitDate,
+      visitorName,
+      email,
+      contact,
+      date,
       buildingName,
       flatNo,
       maxRooms,
@@ -12,8 +15,11 @@ async function createVisit(req, res) {
       status,
     } = req.body;
 
+    let visitDate = moment(date)
     let newVisit = await visitorModel.createVisit({
-      visitorId,
+      visitorName,
+      email,
+      contact,
       visitDate,
       buildingName,
       flatNo,
@@ -34,12 +40,11 @@ async function createVisit(req, res) {
   }
 }
 
-async function getVisit(req,res) {
+async function getVisit(req, res) {
   try {
-    // res.send("workingg")
-    let { id } = req.query;
-    let fetchVisits = await visitorModel.getVisit({ id });
-    console.log(fetchVisits)
+    let { id, visitorName } = req.query;
+    let fetchVisits = await visitorModel.getVisit({ id, visitorName });
+    console.log(fetchVisits);
     res.send({
       status: 200,
       message: "data fetched successfully",

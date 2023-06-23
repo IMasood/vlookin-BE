@@ -53,7 +53,7 @@ async function getUsers({ id, email, role, name }) {
       if(user.length ==1){
         return user[0];
       } else {
-        return user
+        return user;
       }
   } catch (err) {
     console.log(err.status);
