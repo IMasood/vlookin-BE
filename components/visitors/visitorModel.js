@@ -34,7 +34,7 @@ async function createVisit({
   }
 }
 
-async function getVisit({ id, visitorName, page, limit }) {
+async function getVisit({ id, visitorName, skip, limit }) {
   try {
     let where = {};
     if (id) {
@@ -44,7 +44,7 @@ async function getVisit({ id, visitorName, page, limit }) {
       where.visitorName = visitorName;
     }
     console.log(where);
-    let visitorData = await Visitor.find(where);
+    let visitorData = await Visitor.find(where).skip(skip).limit(limit);
     return visitorData;
   } catch (err) {
     return {

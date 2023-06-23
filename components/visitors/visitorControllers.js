@@ -40,10 +40,15 @@ async function createVisit(req, res) {
   }
 }
 
+
 async function getVisit(req, res) {
   try {
-    let { id, visitorName } = req.query;
-    let fetchVisits = await visitorModel.getVisit({ id, visitorName });
+    let { id, visitorName, page = 1, limit = 10 } = req.query;
+
+    // Calculate skip and limit values based on the page number and limit
+    const skip = (page - 1) * limit;
+
+    let fetchVisits = await visitorModel.getVisit({ id, visitorName, limit, skip });
     console.log(fetchVisits);
     res.send({
       status: 200,
