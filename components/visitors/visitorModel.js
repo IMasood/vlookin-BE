@@ -45,16 +45,58 @@ async function getVisit({ id, visitorName, skip, limit }) {
     }
     console.log(where);
     let visitorData = await Visitor.find(where).skip(skip).limit(limit);
-    return visitorData;
+    let visitorCount = await Visitor.countDocuments();
+    return { visitorCount, visitorData };
   } catch (err) {
-    return {
-      status: 500,
-      message: err.message,
-    };
+    throw(err)
+  }
+
+}
+
+async function updateVisit({
+  id,
+  visitorName,
+  email,
+  contact,
+  visitDate,
+  buildingName,
+  flatNo,
+  maxRooms,
+  comments,
+  status,
+}) {
+  try {
+    let response = await Visitor.findOneAndUpdate(
+      { _id: id.id },
+      {
+        visitorName,
+        email,
+        contact,
+        visitDate,
+        buildingName,
+        flatNo,
+        maxRooms,
+        comments,
+        status,
+      });
+    return response;
+  } catch (err) {
+    throw err;
+  }
+}
+
+async function deleteVisit({ id }) {
+  try {
+    let response = await Visitor.findOneAndDelete({ _id: id });
+    return response;
+  } catch (err) {
+    throw err;
   }
 }
 
 module.exports = {
   createVisit,
   getVisit,
+  updateVisit,
+  deleteVisit,
 };
