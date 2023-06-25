@@ -17,7 +17,7 @@ async function createUser(req, res) {
 
     let userExists = await userModel.getUsers({ email });
 
-    if (userExists) {
+    if (userExists.length!=0) {
       return res.status(409).send({
         success: false,
         message: "User with an email already exist",

@@ -9,7 +9,7 @@ async function createVisit({
   flatNo,
   maxRooms,
   comments,
-  status,
+  followUp,
 }) {
   try {
     let newVisit = await Visitor.create({
@@ -21,7 +21,7 @@ async function createVisit({
       flatNo,
       maxRooms,
       comments,
-      status,
+      followUp,
     });
 
     return newVisit;
@@ -44,9 +44,8 @@ async function getVisit({ id, visitorName, skip, limit }) {
       where.visitorName = visitorName;
     }
     console.log(where);
-    let visitorData = await Visitor.find(where).skip(skip).limit(limit);
-    let visitorCount = await Visitor.countDocuments();
-    return { visitorCount, visitorData };
+    let visitorData = await Visitor.find(where);
+    return visitorData ;
   } catch (err) {
     throw(err)
   }
@@ -63,7 +62,7 @@ async function updateVisit({
   flatNo,
   maxRooms,
   comments,
-  status,
+  followUp,
 }) {
   try {
     let response = await Visitor.findOneAndUpdate(
@@ -77,7 +76,7 @@ async function updateVisit({
         flatNo,
         maxRooms,
         comments,
-        status,
+        followUp,
       });
     return response;
   } catch (err) {

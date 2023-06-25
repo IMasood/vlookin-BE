@@ -33,7 +33,6 @@ async function createUser({
 
 async function getUsers({ id, email, role, name }) {
   try {
-    console.log("in userMOdels");
     let user = null;
     let searchParams = {};
     if (id) {
