@@ -12,7 +12,7 @@ async function createVisit(req, res) {
       flatNo,
       maxRooms,
       comments,
-      status,
+      followUp,
     } = req.body;
 
     let visitDate = moment(date);
@@ -25,7 +25,7 @@ async function createVisit(req, res) {
       flatNo,
       maxRooms,
       comments,
-      status,
+      followUp,
     });
     res.send({
       status: 200,
@@ -79,7 +79,7 @@ async function updateVisit(req, res) {
       flatNo,
       maxRooms,
       comments,
-      status,
+      followUp,
     } = req.body;
 
     let visitDate =moment(date)
@@ -94,7 +94,7 @@ async function updateVisit(req, res) {
       flatNo,
       maxRooms,
       comments,
-      status,
+      followUp,
     });
      res.status(200).send({
        message: "Update Successful",
@@ -109,6 +109,9 @@ async function updateVisit(req, res) {
     });
   }
 }
+
+
+
 async function deleteVisit(req, res) {
   try {
     let { id } = req.query;

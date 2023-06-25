@@ -17,7 +17,7 @@ const visitorSchema = new mongoose.Schema(
     flatNo: { type: String },
     maxRooms: { type: Number },
     comments: { type: String },
-    status: { type: Boolean, default: false },
+    followUp: { type: String},
   },
   { timestamps: true }
 );
