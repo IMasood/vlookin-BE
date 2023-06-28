@@ -1,4 +1,4 @@
-var Tenant = require("../dal/tenantModel");
+var tenantModel = require("../dal/tenantModel");
 
 async function createTenant(req, res) {
   try {
@@ -11,9 +11,8 @@ async function createTenant(req, res) {
       officeNo,
       nationality,
     } = req.body;
-    console.log("In POST COntroller");
 
-    let response = await Tenant.create({
+    let response = await tenantModel.create({
       tenantName,
       email,
       buildingName,
@@ -39,7 +38,8 @@ async function createTenant(req, res) {
 
 async function getTenant(req, res) {
   try {
-    let response = await Tenant.getData();
+    let {id , email} = req.query
+    let response = await tenantModel.getTenant({id, email});
     console.log(response);
     if (response.status === 200) {
       res.status(200).send({
@@ -57,7 +57,67 @@ async function getTenant(req, res) {
   }
 }
 
+async function updateTenant(req, res) {
+  try {
+    let {
+      tenantName,
+      email,
+      buildingName,
+      flatNo,
+      contact,
+      officeNo,
+      nationality,
+    } = req.body;
+
+    let id = req.query;
+
+    let response = await tenantModel.updateTenant({
+      id,
+      tenantName,
+      email,
+      buildingName,
+      flatNo,
+      contact,
+      officeNo,
+      nationality,
+    });
+
+    res.status(200).send({
+      status: 200,
+      message: "Tenant Updated Successfully",
+      data: response,
+    });
+  } catch (err) {
+    res.status(500).send({
+      status: 500,
+      message: err.message,
+    });
+  }
+}
+
+
+async function deleteTenant(req, res) {
+  try {
+    let id = req.query
+    let result = await tenantModel.deleteTenant(id) 
+    res.status(200).send({
+      status: 200,
+      message: "Tenant Successfully Deleted",
+      data: result,
+    })
+    
+
+  } catch (err) {
+    res.status(500).send({
+      status: 500,
+      message: err.message
+    })
+  }
+} 
+
 module.exports = {
   createTenant,
   getTenant,
+  updateTenant,
+  deleteTenant
 };

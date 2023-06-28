@@ -96,11 +96,19 @@ async function updateVisit(req, res) {
       comments,
       followUp,
     });
-     res.status(200).send({
-       message: "Update Successful",
-       status: 200,
-       response: result,
-     });
+    if (result === null) {
+      res.status(404).send({
+        message: "Record does not exists",
+        status: 404,
+        response: result,
+      });
+    } else {
+      res.status(200).send({
+        message: "Update Successful",
+        status: 200,
+        response: result,
+      });
+    }
     return result
   } catch (err) {
     res.send({
@@ -116,12 +124,21 @@ async function deleteVisit(req, res) {
   try {
     let { id } = req.query;
 
+
     let result = await visitorModel.deleteVisit({ id });
+
+    if (result === null) {
+      res.status(404).send({
+      message: "Record does not exists",
+      status: 404,
+      response: result,
+    });     
+    }else{
     res.status(200).send({
       message: "Deleted Successfully",
       status: 200,
       response: result,
-    });
+    });}
   } catch (err) {
     res.send({
       status: 500,

@@ -63,7 +63,51 @@ async function getUsers({ id, email, role, name }) {
   }
 }
 
+async function updateUser({
+  id,
+  userName,
+  email,
+  contact,
+  password,
+  role,
+  allowSubUsers,
+  allowMultipleBuildings,
+  gender,
+  userId,
+}) {
+  try {
+    let response = await User.findOneAndUpdate(
+      { _id: id.id },
+      {
+        userName,
+        email,
+        contact,
+        password,
+        role,
+        allowSubUsers,
+        allowMultipleBuildings,
+        gender,
+        userId,
+      }
+    );
+    return response;
+  } catch (err) {
+    throw err;
+  }
+}
+
+async function deleteUser({ id }) {
+  try {
+    let response = await User.findOneAndDelete({ _id: id });
+    return response;
+  } catch (err) {
+    throw err;
+  }
+}
+
 module.exports = {
   createUser,
   getUsers,
+  updateUser,
+  deleteUser
 };
