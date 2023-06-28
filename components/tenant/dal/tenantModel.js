@@ -10,7 +10,6 @@ async function create({
   nationality,
 }) {
   try {
-    console.log("In POST DAL", email);
     let addTenant = await Tenant.create({
       tenantName,
       email,
@@ -20,7 +19,6 @@ async function create({
       officeNo,
       nationality,
     });
-    console.log(addTenant);
     return {
       status: 200,
       data: addTenant,
@@ -33,9 +31,17 @@ async function create({
   }
 }
 
-async function getData() {
+async function getTenant({id,email}) {
   try {
-    let data = await Tenant.find();
+
+    let where ={};
+    if (id) {
+      where._id = id
+    }
+    if (email) {
+      where.email = email
+    }
+    let data = await Tenant.find(where);
     return {
       status: 200,
       data: data,
@@ -48,7 +54,49 @@ async function getData() {
   }
 }
 
+async function updateTenant({
+  id,
+  tenantName,
+  email,
+  buildingName,
+  flatNo,
+  contact,
+  officeNo,
+  nationality,
+}) {
+  try {
+    let updatedTenant = await Tenant.findOneAndUpdate(
+      { _id: id.id },
+      {
+        tenantName,
+        email,
+        buildingName,
+        flatNo,
+        contact,
+        officeNo,
+        nationality,
+      }
+    );
+    return updatedTenant;
+  } catch (err) {
+    throw err;
+  }
+}
+
+async function deleteTenant({id}) {
+  try {
+    let response = await Tenant.findOneAndDelete({
+      _id: id,
+    });
+    return response
+  } catch (err) {
+    throw err;
+  }
+}
+
 module.exports = {
   create,
-  getData,
+  getTenant,
+  updateTenant,
+  deleteTenant,
 };
