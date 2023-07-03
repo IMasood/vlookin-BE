@@ -3,54 +3,50 @@ let Tenant = require("../model/tenantSchema");
 async function create({
   tenantName,
   email,
-  buildingName,
+  buildingId,
   flatNo,
   contact,
   officeNo,
   nationality,
+  OTP_Expiry,
+  OTP,
 }) {
   try {
     let addTenant = await Tenant.create({
       tenantName,
       email,
-      buildingName,
+      buildingId,
       flatNo,
       contact,
       officeNo,
       nationality,
+      OTP_Expiry,
+      OTP,
     });
-    return {
-      status: 200,
-      data: addTenant,
-    };
+    return addTenant;
   } catch (err) {
-    return {
-      status: 500,
-      message: err.message,
-    };
+    throw err;
   }
 }
 
-async function getTenant({id,email}) {
+async function getTenant({ id, email, all }) {
   try {
-
-    let where ={};
+    let where = {};
+    let data;
+    if (all) {
+      data = await Tenant.find().populate({ path: "buildingId" });
+      return data;
+    }
     if (id) {
-      where._id = id
+      where._id = id;
     }
     if (email) {
-      where.email = email
+      where.email = email;
     }
-    let data = await Tenant.find(where);
-    return {
-      status: 200,
-      data: data,
-    };
+    data = await Tenant.findOne(where).populate({ path: "buildingId" });
+    return data;
   } catch (err) {
-    return {
-      status: 500,
-      message: err.message,
-    };
+    throw err;
   }
 }
 
@@ -83,12 +79,12 @@ async function updateTenant({
   }
 }
 
-async function deleteTenant({id}) {
+async function deleteTenant({ id }) {
   try {
     let response = await Tenant.findOneAndDelete({
       _id: id,
     });
-    return response
+    return response;
   } catch (err) {
     throw err;
   }

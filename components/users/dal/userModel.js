@@ -31,35 +31,24 @@ async function createUser({
   }
 }
 
-async function getUsers({ id, email, role, name }) {
+async function getUsers({ id, email, all, name }) {
   try {
     let user = null;
     let searchParams = {};
+    if (all) {
+      user = await User.find();
+      return user;
+    }
     if (id) {
       searchParams._id = id;
     }
     if (email) {
       searchParams.email = email;
     }
-    if (role) {
-      searchParams.role = role;
-    }
-    if (name) {
-      searchParams.userName = name;
-    }
-    user = await User.find(searchParams);
-    console.log(searchParams, user);
-      if(user.length ==1){
-        return user[0];
-      } else {
-        return user;
-      }
+    user = await User.findOne(searchParams);
+    return user;
   } catch (err) {
-    console.log(err.status);
-    return {
-      status: 500,
-      message: err.message,
-    };
+    throw err;
   }
 }
 
@@ -109,5 +98,5 @@ module.exports = {
   createUser,
   getUsers,
   updateUser,
-  deleteUser
+  deleteUser,
 };

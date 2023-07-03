@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+// const BuildingModel = require("../../buildings/buildingSchema")
 
 // Define the schema
 const tenantSchema = new mongoose.Schema(
@@ -12,8 +13,9 @@ const tenantSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    buildingName: {
-      type: String,
+    buildingId: {
+      type: mongoose.Types.ObjectId,
+      ref:"BuildingModel"
     },
     flatNo: {
       type: String,
@@ -26,6 +28,16 @@ const tenantSchema = new mongoose.Schema(
     },
     nationality: {
       type: String,
+    },
+    OTP: {
+      type: String,
+    },
+    OTP_Expiry: {
+      type: mongoose.SchemaTypes.Date,
+    },
+    OTP_Verified: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }
