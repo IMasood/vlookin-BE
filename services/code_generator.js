@@ -1,3 +1,5 @@
+const bcrypt = require ('bcrypt')
+
 function buildingCode(buildingName) {
     buildingName = buildingName.toUpperCase()
     let nameArray = buildingName.split(" ");
@@ -17,6 +19,20 @@ function buildingCode(buildingName) {
     return buildingCode
 }
 
+
+
+async function OTP_generator() {
+  //generate and return 4 digit hashed OTP 
+  let OTP_Code = Math.floor(1000 + Math.random() * 9000).toString();
+  let hashedOTP = await bcrypt.hash(OTP_Code, 5);
+  return ({OTP_Code, hashedOTP})
+
+}
+
+
+
+
 module.exports = {
   buildingCode,
+  OTP_generator
 };

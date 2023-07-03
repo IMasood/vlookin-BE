@@ -4,4 +4,6 @@ const buildingController = require('./buildingController')
 
 router.post('/', buildingController.createBuilding)
 router.get('/', buildingController.getBuilding)
+router.patch('/', buildingController.updateBuilding)
+router.delete('/', buildingController.deleteBuilding)
 module.exports = router

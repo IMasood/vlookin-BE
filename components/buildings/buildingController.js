@@ -53,8 +53,58 @@ try {
         })
     }
 }
+async function updateBuilding(req, res) {
+  try {
+    let { id } = req.query;
+    let { buildingName, fullName, watchman, floorCount, parkingCount, landmark } = req.body
+
+
+    let updatedBuilding = await buildingModel.updateBuilding({
+      id,
+      buildingName,
+      fullName,
+      watchman,
+      floorCount,
+      parkingCount,
+      landmark,
+    });
+    return res.status(200).send({
+      message: "Building Updated Succesfully",
+      status: 200,
+      data: updatedBuilding,
+    });
+  } catch (err) {
+    res.status(500).send({
+      message: "Delete failed",
+      error: err.message,
+      status: 500,
+    });
+  }
+}
+async function deleteBuilding(req, res) {
+
+  try {
+    let { id } = req.query
+    
+    let deleteBuilding = await buildingModel.deleteBuilding({ id })
+    return (res.status(200).send({
+      message: "Building Deleted Succesfully",
+      status: 200,
+      data: deleteBuilding
+    }))
+  } catch (err) {
+    res.status(500).send({
+      message: "Delete failed",
+      error: err.message,
+      status:500
+    })
+  }
+  
+}
 
 module.exports = {
   createBuilding,
-  getBuilding
+  getBuilding,
+  updateBuilding,
+  deleteBuilding,
 };

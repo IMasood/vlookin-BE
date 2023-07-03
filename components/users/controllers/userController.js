@@ -15,9 +15,19 @@ async function createUser(req, res) {
       userId,
     } = req.body;
 
+    let emailReg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
+    let contactRegex = /^(?:\+971|0)(?:\d{1,2})?\d{7}$/
+
+    if (!emailReg.test(email) || !contactRegex.test(contact)) {
+      return res.status(400).send({
+        message: "Invalid email or contact format",
+      });
+    }
     let userExists = await userModel.getUsers({ email });
 
-    if (userExists.length != 0) {
+    console.log(userExists);
+
+    if (userExists) {
       return res.status(409).send({
         success: false,
         message: "User with an email already exist",
@@ -96,15 +106,14 @@ async function updateUser(req, res) {
       userId,
     });
 
-    if (response!==null){
-
-    res.status(200).send({
-      status: 200,
-      message: "User Updated Successfully",
-      data: response,
-    });
+    if (response !== null) {
+      res.status(200).send({
+        status: 200,
+        message: "User Updated Successfully",
+        data: response,
+      });
     } else {
-      res.status(200).send({message:"No record found"})
+      res.status(200).send({ message: "No record found" });
     }
   } catch (err) {
     res.status(500).send({

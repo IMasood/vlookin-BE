@@ -37,8 +37,44 @@ async function getBuilding(){
   }
 
 }
+async function updateBuilding({
+  id,
+  buildingName,
+  fullName,
+  watchman,
+  floorCount,
+  parkingCount,
+  landmark,
+}) {
+  try {
+    let response = await Building.findOneAndUpdate({_id:id},{
+      buildingName,
+      fullName,
+      watchman,
+      floorCount,
+      parkingCount,
+      landmark,
+    });
+    return response;
+  } catch (err) {
+    throw err;
+  }
+}
+async function deleteBuilding({id}){
+  try {
+    
+    let response = await Building.findOneAndDelete({_id: id})
+    return response
+
+  } catch (err) {
+    throw err
+  }
+
+}
 
 module.exports = {
   addBuilding,
-  getBuilding
+  getBuilding,
+  updateBuilding,
+  deleteBuilding
 };
