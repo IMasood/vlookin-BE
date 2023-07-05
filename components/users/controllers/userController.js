@@ -62,8 +62,8 @@ async function createUser(req, res) {
 
 async function getUsers(req, res) {
   try {
-    let { id, role, email, name } = req.query;
-    let userData = await userModel.getUsers({ id, role, email, name });
+    let { id, all, email, name } = req.query;
+    let userData = await userModel.getUsers({ id, all, email, name });
     res.send({
       status: 200,
       message: "Data fetched successfully",

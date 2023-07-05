@@ -68,11 +68,11 @@ async function getTenant(req, res) {
     let { id, email, all } = req.query;
     let response = await tenantModel.getTenant({ id, email, all });
     console.log(response);
-    if (response.status === 200) {
+    if (response) {
       res.status(200).send({
         message: "Data fetched successfully",
         status: 200,
-        data: response.data,
+        data: response,
       });
     }
   } catch (err) {
