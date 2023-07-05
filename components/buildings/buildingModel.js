@@ -8,6 +8,7 @@ async function addBuilding({
   watchman,
   landmark,
   fullName,
+  facilities
 }) {
   try {
     let newBuilding = Building.create({
@@ -18,6 +19,7 @@ async function addBuilding({
       watchman,
       landmark,
       fullName,
+      facilities,
     });
 
     return newBuilding;
@@ -53,16 +55,21 @@ async function updateBuilding({
   floorCount,
   parkingCount,
   landmark,
+  facilities,
 }) {
   try {
-    let response = await Building.findOneAndUpdate({_id:id},{
-      buildingName,
-      fullName,
-      watchman,
-      floorCount,
-      parkingCount,
-      landmark,
-    });
+    let response = await Building.findOneAndUpdate(
+      { _id: id },
+      {
+        buildingName,
+        fullName,
+        watchman,
+        floorCount,
+        parkingCount,
+        landmark,
+        facilities,
+      }
+    );
     return response;
   } catch (err) {
     throw err;

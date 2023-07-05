@@ -27,6 +27,7 @@ const buildingSchema = new mongoose.Schema(
     landmark: {
       type: String,
     },
+    facilities : [{type: String}]
   },
   { timestamps: true }
 );
