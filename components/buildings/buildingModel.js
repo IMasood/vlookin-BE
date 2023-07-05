@@ -26,10 +26,18 @@ async function addBuilding({
   }
 }
 
-async function getBuilding(){
+async function getBuilding({all, id}){
   try {
-    
-    let response = await Building.find()
+    let where = {};
+    let response;
+    if (all) {
+      response = await Building.find();
+      return response;
+    }
+    if (id) {
+      where._id = id;
+    }
+    response = await Building.findOne(where)
     return response
 
   } catch (err) {

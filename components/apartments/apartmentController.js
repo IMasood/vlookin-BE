@@ -42,7 +42,8 @@ async function addApartment(req, res) {
 
 async function getApartment(req, res) {
   try {
-    let result = await apartmentModel.getApartment();
+    let { id, all } = req.query;
+    let result = await apartmentModel.getApartment({id, all});
 
     res.status(200).send({
       status: 200,

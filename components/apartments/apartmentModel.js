@@ -30,9 +30,18 @@ async function addApartment({
   }
 }
 
-async function getApartment() {
+async function getApartment({all, id}) {
   try {
-    let response = await Apartment.find().populate("buildingId");
+    let where = {}
+    let response
+    if (all) {
+      response = await Apartment.find().populate("buildingId");
+      return response
+    }
+    if(id){
+      where._id = id
+    }
+    response = await Apartment.findOne(where).populate("buildingId");
     return response;
   } catch (err) {
     throw err;
