@@ -32,7 +32,7 @@ async function addApartment({
 
 async function getApartment() {
   try {
-    let response = await Apartment.find();
+    let response = await Apartment.find().populate("buildingId");
     return response;
   } catch (err) {
     throw err;
