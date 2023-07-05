@@ -21,7 +21,7 @@ const buildingSchema = new mongoose.Schema(
     parkingCount: {
       type: String,
     },
-    watchMan: {
+    watchman: {
       type: String,
     },
     landmark: {
@@ -33,5 +33,6 @@ const buildingSchema = new mongoose.Schema(
 
 // Create and export the model
 const BuildingModel =
-  mongoose.models.buildingSchema || mongoose.model("BuildingModel", buildingSchema);
+  mongoose.models.buildingSchema ||
+  mongoose.model("BuildingModel", buildingSchema);
 module.exports = BuildingModel;
