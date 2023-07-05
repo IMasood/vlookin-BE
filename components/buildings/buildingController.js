@@ -22,9 +22,9 @@ async function createBuilding(req, res) {
       fullName,
     });
     res.send({
-        status: 200,
-        message: "building successfully added",
-        data: newBuilding
+      status: 200,
+      message: "building successfully added",
+      data: newBuilding,
     });
   } catch (err) {
     res.send({
@@ -34,30 +34,34 @@ async function createBuilding(req, res) {
   }
 }
 
-async function getBuilding(req, res){
- 
-try {
-      
-  let result = await buildingModel.getBuilding();
+async function getBuilding(req, res) {
+  try {
+    let { all, id } = req.query;
+    let result = await buildingModel.getBuilding({ all, id });
 
-  res.status(200).send({
-    status: 200,
-    message: "Building Data Fetched Successfully",
+    res.status(200).send({
+      status: 200,
+      message: "Building Data Fetched Successfully",
       data: result,
-  })
-
-    } catch (err) {
-        res.status(500).send({
-            status:500,
-            message: err.message,
-        })
-    }
+    });
+  } catch (err) {
+    res.status(500).send({
+      status: 500,
+      message: err.message,
+    });
+  }
 }
 async function updateBuilding(req, res) {
   try {
     let { id } = req.query;
-    let { buildingName, fullName, watchman, floorCount, parkingCount, landmark } = req.body
-
+    let {
+      buildingName,
+      fullName,
+      watchman,
+      floorCount,
+      parkingCount,
+      landmark,
+    } = req.body;
 
     let updatedBuilding = await buildingModel.updateBuilding({
       id,
@@ -82,24 +86,22 @@ async function updateBuilding(req, res) {
   }
 }
 async function deleteBuilding(req, res) {
-
   try {
-    let { id } = req.query
-    
-    let deleteBuilding = await buildingModel.deleteBuilding({ id })
-    return (res.status(200).send({
+    let { id } = req.query;
+
+    let deleteBuilding = await buildingModel.deleteBuilding({ id });
+    return res.status(200).send({
       message: "Building Deleted Succesfully",
       status: 200,
-      data: deleteBuilding
-    }))
+      data: deleteBuilding,
+    });
   } catch (err) {
     res.status(500).send({
       message: "Delete failed",
       error: err.message,
-      status:500
-    })
+      status: 500,
+    });
   }
-  
 }
 
 module.exports = {
