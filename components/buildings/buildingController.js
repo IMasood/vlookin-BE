@@ -9,6 +9,7 @@ async function createBuilding(req, res) {
       watchman,
       landmark,
       fullName,
+      facilities,
     } = req.body;
 
     let buildingCode = code_generator.buildingCode(buildingName);
@@ -20,6 +21,7 @@ async function createBuilding(req, res) {
       watchman,
       landmark,
       fullName,
+      facilities,
     });
     res.send({
       status: 200,
@@ -61,6 +63,7 @@ async function updateBuilding(req, res) {
       floorCount,
       parkingCount,
       landmark,
+      facilities,
     } = req.body;
 
     let updatedBuilding = await buildingModel.updateBuilding({
@@ -71,6 +74,7 @@ async function updateBuilding(req, res) {
       floorCount,
       parkingCount,
       landmark,
+      facilities,
     });
     return res.status(200).send({
       message: "Building Updated Succesfully",

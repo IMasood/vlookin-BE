@@ -15,7 +15,7 @@ const tenantSchema = new mongoose.Schema(
     },
     buildingId: {
       type: mongoose.Types.ObjectId,
-      ref:"BuildingModel"
+      ref: "BuildingModel",
     },
     flatNo: {
       type: String,
@@ -42,6 +42,11 @@ const tenantSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Compare Email OTP
+tenantSchema.methods.compareEmailVerificationOTP = async function (OTP) {
+  return await bcrypt.compare(OTP, this.OTP);
+};
 
 // Create and export the model
 const TenantModel =

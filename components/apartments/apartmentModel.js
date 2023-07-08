@@ -1,28 +1,10 @@
 const Apartment = require("./apartmentSchema");
 
-async function addApartment({
-  buildingId,
-  apartmentType,
-  area,
-  rent,
-  furnished,
-  isStudio,
-  balcony,
-  rooms,
-  comments,
-}) {
+async function addApartment(apartments) {
   try {
-    let newApartment = Apartment.create({
-      buildingId,
-      apartmentType,
-      area,
-      rent,
-      furnished,
-      isStudio,
-      balcony,
-      rooms,
-      comments,
-    });
+    let newApartment;
+
+   newApartment = await Apartment.insertMany(apartments);
 
     return newApartment;
   } catch (err) {
@@ -35,13 +17,16 @@ async function getApartment({all, id}) {
     let where = {}
     let response
     if (all) {
-      response = await Apartment.find().populate("buildingId");
+      response = await Apartment.find().populate("buildingId", ["buildingName","buildingCode"]);
       return response
     }
     if(id){
       where._id = id
     }
-    response = await Apartment.findOne(where).populate("buildingId");
+    response = await Apartment.findOne(where).populate("buildingId", [
+      "buildingName",
+      "buildingCode",
+    ]);
     return response;
   } catch (err) {
     throw err;
@@ -57,6 +42,8 @@ async function updateApartment({
   isStudio,
   balcony,
   rooms,
+  floorNo,
+  flatNo,
   comments,
 }) {
   try {
@@ -71,6 +58,8 @@ async function updateApartment({
         isStudio,
         balcony,
         rooms,
+        floorNo,
+        flatNo,
         comments,
       }
     );

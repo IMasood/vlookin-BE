@@ -8,6 +8,7 @@ var visitorRouter = require("./components/visitors/routes");
 var userRouter = require("./components/users/routes");
 var buildingRouter = require("./components/buildings/routes.js");
 var apartmentRouter = require("./components/apartments/routes.js");
+var receiptRouter = require("./components/receipts/routes.js");
 var cors = require("cors");
 
 app.use(express.json());
@@ -18,7 +19,10 @@ app.use("/auth", authRouter);
 app.use("/visitor", visitorRouter);
 app.use("/user", userRouter);
 app.use("/building", buildingRouter);
-app.use('/apartment', apartmentRouter)
+app.use("/apartment", apartmentRouter);
+app.use("/receipt", receiptRouter);
+
+
 config.connectDatabase();
 const port = 4000; // Set the port number you want to use
 

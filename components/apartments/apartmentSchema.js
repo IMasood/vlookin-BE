@@ -8,6 +8,9 @@ const apartmentSchema = new mongoose.Schema(
       ref: "BuildingModel",
       required: true,
     },
+    flatNo: {
+      type: String,
+    },
     apartmentType: {
       type: String,
       enum: { values: ["Residential", "Commercial"] },
@@ -27,6 +30,7 @@ const apartmentSchema = new mongoose.Schema(
       type: Boolean,
     },
     isStudio:{type:Boolean},
+    floorNo:{type:String},
     rooms: {
       bedRoom: { type: Number, default: 0 },
       dining: { type: Number, default: 0 },

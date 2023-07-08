@@ -2,21 +2,7 @@ const apartmentModel = require("./apartmentModel");
 
 async function addApartment(req, res) {
   try {
-      let {
-          buildingId,
-          apartmentType,
-          area,
-          rent,
-          furnished,
-          isStudio,
-          balcony,
-          rooms,
-          comments
-
-            
-    } = req.body;
-
-    let newApartment = await apartmentModel.addApartment({
+    let {
       buildingId,
       apartmentType,
       area,
@@ -25,8 +11,32 @@ async function addApartment(req, res) {
       isStudio,
       balcony,
       rooms,
+      floorNo,
       comments,
-    });
+      flatNo,
+      noOfApartments
+    } = req.body;
+
+ let apartmentArray =[]
+    for (let i = 0; i < noOfApartments; i++){
+
+      apartmentArray.push({
+        buildingId: buildingId,
+        apartmentType:apartmentType,
+        area:area,
+        rent:rent,
+        furnished:furnished,
+        isStudio:isStudio,
+        balcony:balcony,
+        rooms:rooms,
+        floorNo:floorNo,
+        comments:comments,
+        flatNo: flatNo[i]
+      });
+
+    }
+    console.log(apartmentArray)
+    let newApartment = await apartmentModel.addApartment(apartmentArray);
     res.send({
       status: 200,
       message: "Apartment Successfully Added",
@@ -43,7 +53,7 @@ async function addApartment(req, res) {
 async function getApartment(req, res) {
   try {
     let { id, all } = req.query;
-    let result = await apartmentModel.getApartment({id, all});
+    let result = await apartmentModel.getApartment({ id, all });
 
     res.status(200).send({
       status: 200,
@@ -69,6 +79,7 @@ async function updateApartment(req, res) {
       isStudio,
       balcony,
       rooms,
+      floorNo,
       comments,
     } = req.body;
 
@@ -82,6 +93,7 @@ async function updateApartment(req, res) {
       isStudio,
       balcony,
       rooms,
+      floorNo,
       comments,
     });
     return res.status(200).send({
