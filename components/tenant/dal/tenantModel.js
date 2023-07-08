@@ -23,7 +23,7 @@ async function create({
       OTP_Expiry,
       OTP,
     });
-    return addTenant;
+    return ({data: addTenant, status:200});
   } catch (err) {
     throw err;
   }
@@ -34,7 +34,10 @@ async function getTenant({ id, email, all }) {
     let where = {};
     let data;
     if (all) {
-      data = await Tenant.find().populate({ path: "buildingId" });
+      data = await Tenant.find().populate("buildingId", [
+        "buildingName",
+        "buildingCode",
+      ]);
       return data;
     }
     if (id) {
@@ -43,7 +46,7 @@ async function getTenant({ id, email, all }) {
     if (email) {
       where.email = email;
     }
-    data = await Tenant.findOne(where).populate({ path: "buildingId" });
+    data = await Tenant.findOne(where).populate("buildingId" , ["buildingName","buildingCode"]);
     return data;
   } catch (err) {
     throw err;
@@ -59,6 +62,9 @@ async function updateTenant({
   contact,
   officeNo,
   nationality,
+  OTP_Verified,
+  OTP,
+  OTP_Expiry,
 }) {
   try {
     let updatedTenant = await Tenant.findOneAndUpdate(
@@ -71,6 +77,9 @@ async function updateTenant({
         contact,
         officeNo,
         nationality,
+        OTP_Verified,
+        OTP,
+        OTP_Expiry,
       }
     );
     return updatedTenant;

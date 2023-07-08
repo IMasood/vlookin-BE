@@ -27,8 +27,7 @@ async function createTenant(req, res) {
     }
 
     //creating and sending OTP
-    let emailVerificationOTP = await code_generator.OTP_generator(); 
-    console.log( emailVerificationOTP.hashedOTP)
+    let emailVerificationOTP = await code_generator.OTP_generator();
     let OTP_Expiry = Date.now() + OTP_EXPIRE_TIME * 60 * 1000;
     let response = await tenantModel.create({
       tenantName,
@@ -44,11 +43,11 @@ async function createTenant(req, res) {
 
     if (response.status == 200) {
       let html = htmlTemplate.otp_email({ otp: emailVerificationOTP.OTP_Code });
-      let sendEmailResponse = await sendMail.sendEmail({ html, to: email });
-      let sendSMSResponse = await sendSMS.send_otp_sms({
-        otp: emailVerificationOTP.OTP_Code,
-        // sms_contact: [contact],SMS Sending Temporarily disabled due to development environment
-      });
+      // let sendEmailResponse = await sendMail.sendEmail({ html, to: email });
+      // let sendSMSResponse = await sendSMS.send_otp_sms({
+      //   otp: emailVerificationOTP.OTP_Code,
+      //   // sms_contact: [contact],SMS Sending Temporarily disabled due to development environment
+      // });
       res.status(200).send({
         message: "Tenant created successfully",
         status: 200,
@@ -140,9 +139,81 @@ async function deleteTenant(req, res) {
   }
 }
 
+async function verifyOTP(req, res) {
+  try {
+    let { tenantId, OTP } = req.body;
+    //Get merchant
+    let tenant = await tenantModel.getTenant({ tenantId });
+    //Validate OTP expiration time
+    let isOTPValid = moment().isBefore(tenant?.OTP_Expiry);
+    let isOTPMatched = await tenant.compareEmailVerificationOTP(OTP);
+
+    if (!isOTPValid || !isOTPMatched) {
+      return res.status(401).send({
+        success: false,
+        message: "Invalid or expired OTP",
+      });
+    } else if (isOTPValid && isOTPMatched) {
+      //If OTP is matched update email status to verified
+      let result = await tenantModel.updateTenant({
+        id: tenantId,
+        OTP_Verified: true,
+      });
+      if (result.modifiedCount) {
+        res
+          .status(200)
+          .send({ success: true, message: "Email verified successfully" });
+      }
+    }
+  } catch (err) {
+    res.status(500).send({
+      success: false,
+      message: "OTP verification failed",
+      error: err.message,
+    });
+  }
+}
+
+async function resendOTP(req, res) {
+  try {
+    let { tenantId } = req.body;
+    let emailVerificationOTP = await code_generator.OTP_generator();
+    let OTP_Expiry = Date.now() + OTP_EXPIRE_TIME * 60 * 1000;
+    let responseOfUpdateOTP = await tenantModel.updateTenant({
+      id: tenantId,
+      OTP: emailVerificationOTP.hashedOTP,
+      OTP_Expiry,
+    });
+    if (responseOfUpdateOTP !== null) {
+      let html = htmlTemplate.otp_email({
+        otp: emailVerificationOTP.OTP_Code,
+      });
+      let sendEmailResponse = await sendMail.sendEmail({ html, to: email });
+      let sendSMSResponse = await sendSMS.send_otp_sms({
+        otp: emailVerificationOTP.OTP_Code,
+        // sms_contact: [contact],SMS Sending Temporarily disabled due to development environment
+      });
+    
+      res.status(200).send({
+        message: "OTP Resent successfully",
+        status: 200,
+      });
+    }
+    let;
+  } catch (err) {
+    res.status(500).send({
+      success: false,
+      message: "OTP resend failed",
+      error: err.message,
+    });
+  }
+}
+
 module.exports = {
   createTenant,
   getTenant,
   updateTenant,
   deleteTenant,
+  verifyOTP,
+  resendOTP,
 };
