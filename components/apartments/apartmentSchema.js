@@ -10,6 +10,7 @@ const apartmentSchema = new mongoose.Schema(
     },
     flatNo: {
       type: String,
+      required: true,
     },
     apartmentType: {
       type: String,

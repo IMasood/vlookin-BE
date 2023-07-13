@@ -12,16 +12,20 @@ async function addApartment(apartments) {
   }
 }
 
-async function getApartment({all, id}) {
+async function getApartment({all, id, buildingId}) {
   try {
     let where = {}
     let response
-    if (all) {
-      response = await Apartment.find().populate("buildingId", ["buildingName","buildingCode"]);
-      return response
-    }
     if(id){
       where._id = id
+    }
+    if(buildingId){
+      where.buildingId = buildingId
+    }
+    
+    if (all) {
+      response = await Apartment.find(where).populate("buildingId", ["buildingName","buildingCode"]);
+      return response
     }
     response = await Apartment.findOne(where).populate("buildingId", [
       "buildingName",

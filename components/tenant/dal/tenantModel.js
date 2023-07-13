@@ -33,18 +33,18 @@ async function getTenant({ id, email, all }) {
   try {
     let where = {};
     let data;
-    if (all) {
-      data = await Tenant.find().populate("buildingId", [
-        "buildingName",
-        "buildingCode",
-      ]);
-      return data;
-    }
     if (id) {
       where._id = id;
     }
     if (email) {
       where.email = email;
+    }
+    if (all) {
+      data = await Tenant.find(where).populate("buildingId", [
+        "buildingName",
+        "buildingCode",
+      ]);
+      return data;
     }
     data = await Tenant.findOne(where).populate("buildingId" , ["buildingName","buildingCode"]);
     return data;

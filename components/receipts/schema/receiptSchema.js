@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const BuildingModel = require("../buildings/buildingSchema");
+const BuildingModel = require("../../buildings/buildingSchema");
 
 // Define the schema
 const receiptSchema = new mongoose.Schema(
