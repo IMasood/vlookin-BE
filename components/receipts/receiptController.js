@@ -34,7 +34,7 @@ async function createReceipt(req, res) {
     res.send({
       status: 200,
       message: "Receipt successfully added",
-      data: {Receipt , ReceiptTable},
+      data: {Receipt: newReceipt , ReceiptTable: newReceiptTable},
     });
   } catch (err) {
     res.send({
