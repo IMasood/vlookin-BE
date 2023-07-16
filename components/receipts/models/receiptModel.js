@@ -40,10 +40,19 @@ async function getReceipt({ all, id, buildingId }) {
       where.buildingId = buildingId;
     }
     if (all) {
-      response = await Receipt.find(where).populate("tenantAccount");
+      response = await Receipt.find(where).populate("tenantAccount",["tenantName","flatNo","email","nationality","contact","officeNo",]).populate("buildingId", ["buildingName","buildingCode"]);
       return response;
     }
-    response = await Receipt.findOne(where).populate("tenantAccount");
+    response = await Receipt.findOne(where)
+      .populate("tenantAccount", [
+        "tenantName",
+        "flatNo",
+        "email",
+        "nationality",
+        "contact",
+        "officeNo",
+      ])
+      .populate("buildingId", ["buildingName", "buildingCode"]);
     return response;
   } catch (err) {
     throw err;
@@ -131,8 +140,7 @@ async function getReceiptWithTable({ receiptId , tenant, building}) {
       
     } 
 
-    let receiptWithTable = Receipt.aggregate(filter);
-
+    let receiptWithTable = await Receipt.aggregate(filter);
     return receiptWithTable;
   } catch (err) {
     throw err;
