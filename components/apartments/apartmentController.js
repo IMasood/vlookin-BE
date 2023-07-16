@@ -94,6 +94,7 @@ async function updateApartment(req, res) {
       rooms,
       floorNo,
       comments,
+      flatNo,
     } = req.body;
 
     let updatedApartment = await apartmentModel.updateApartment({
@@ -108,6 +109,8 @@ async function updateApartment(req, res) {
       rooms,
       floorNo,
       comments,
+      flatNo
+      
     });
     return res.status(200).send({
       message: "Apartment Updated Succesfully",
