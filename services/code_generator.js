@@ -1,4 +1,5 @@
-const bcrypt = require ('bcrypt')
+const bcrypt = require('bcrypt')
+const moment = require ("moment")
 
 function buildingCode(buildingName) {
     buildingName = buildingName.toUpperCase()
@@ -6,17 +7,21 @@ function buildingCode(buildingName) {
     
     let buildingCode = '';
     
-    buildingCode += nameArray[0][0]
-    buildingCode += nameArray[0][1]
-    buildingCode += nameArray[0][2]
+    buildingCode += nameArray[0].slice(0, 3)
     if (nameArray.length > 1) {
         nameArray.shift()
         nameArray.forEach((elem) => {
         buildingCode += elem[0];
     });
     }
-    buildingCode += Math.floor(Math.random() * 1000);
+    buildingCode += Math.floor(Math.random() * 10000);
     return buildingCode
+}
+
+function complaintCode({buildingCode, flatNo, complaintCount, tenantContact}) {
+  let complaintId = `COMP/${flatNo && flatNo}/${moment().format("YY-MM-DD")}/${tenantContact && tenantContact.slice(-4)}/${complaintCount}`;
+
+  return complaintId
 }
 
 
@@ -34,5 +39,6 @@ async function OTP_generator() {
 
 module.exports = {
   buildingCode,
-  OTP_generator
+  OTP_generator,
+  complaintCode
 };
