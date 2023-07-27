@@ -1,14 +1,12 @@
 const maintenanceModel = require("./maintenanceModel.js");
 const tenantModel = require("../tenant/dal/tenantModel.js");
 const code_generator = require("../../services/code_generator.js");
-const buildingModel = require("../buildings/buildingModel.js");
 const { uploadToCloudinary } = require("../../services/media/uploadFile.js")
 
 
 async function addComplaint(req, res) {
   try {
     let { category, description, createdBy, tenantId, status } = req.body;
-    console.log("Hi")
     let {images = []} = req.files
     let imageList= []
     let tenantDetails, complaintCount, complaintId;
@@ -28,7 +26,6 @@ async function addComplaint(req, res) {
     //upload  images
     if (images.length) {
       let imageUploadResult = await uploadImages(images);
-      console.log("imageUploadResult" + imageUploadResult)
       imageList = imageUploadResult.map((upload) => ({
         imageId: upload.public_id,
         url: upload.secure_url,
@@ -37,7 +34,6 @@ async function addComplaint(req, res) {
     }
 
 
-    console.log(tenantId + tenantDetails + complaintId + complaintCount);
     let newMaintenance = await maintenanceModel.addComplaint({
       category,
       description,

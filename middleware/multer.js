@@ -26,7 +26,6 @@ const upload = multer({
 });
 
 function uploadFiles(fieldNames) {
-  console.log("in Middleware")
   return function (req, res, next) {
     upload.fields(fieldNames)(req, res, function (err) {
       if (err) {
