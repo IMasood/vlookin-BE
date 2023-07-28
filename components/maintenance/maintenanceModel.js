@@ -43,10 +43,15 @@ async function getComplaints({all, id}){
       where._id = id;
     }
     if (all) {
-      response = await Maintenance.find(where);
+      response = await Maintenance.find(where).populate('tenantId', ['tenantName','contact', 'flatNo', 'email']);
       return response;
     }
-    response = await Maintenance.findOne(where)
+    response = await Maintenance.findOne(where).populate("tenantId", [
+      "tenantName",
+      "contact",
+      "flatNo",
+      "email",
+    ]);
     return response
 
   } catch (err) {
