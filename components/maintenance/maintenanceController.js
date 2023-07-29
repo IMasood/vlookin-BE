@@ -6,31 +6,34 @@ const { uploadToCloudinary } = require("../../services/media/uploadFile.js");
 async function addComplaint(req, res) {
   try {
     let { category, description, createdBy, tenantId, status } = req.body;
-    let { images = [] } = req.files;
     let imageList = [];
-    let complaintId;
-      let  [tenantDetails, complaintCount] = await Promise.all([
-         tenantModel.getTenant({ id: tenantId }),
-         maintenanceModel.maintenanceCount({ tenantId }),
-       ]);
 
-       // Generate complaintId using the code_generator.complaintCode function
-    if (tenantDetails){
-       complaintId = code_generator.complaintCode({
-         flatNo: tenantDetails.flatNo,
-         tenantContact: tenantDetails.contact,
-         complaintCount,
-       });
+    if (req.files) {
+      let { images = [] } = req.files;
+      //upload  images
+      if (images.length) {
+        let imageUploadResult = await uploadImages(images);
+        imageList = imageUploadResult.map((upload) => ({
+          imageId: upload.public_id,
+          url: upload.secure_url,
+        }));
+      }
+    }
+    let complaintId;
+    let [tenantDetails, complaintCount] = await Promise.all([
+      tenantModel.getTenant({ id: tenantId }),
+      maintenanceModel.maintenanceCount({ tenantId }),
+    ]);
+
+    // Generate complaintId using the code_generator.complaintCode function
+    if (tenantDetails) {
+      complaintId = code_generator.complaintCode({
+        flatNo: tenantDetails.flatNo,
+        tenantContact: tenantDetails.contact,
+        complaintCount,
+      });
     } else {
-      throw Error('Unable to get Tenant')
-}
-    //upload  images
-    if (images.length) {
-      let imageUploadResult = await uploadImages(images);
-      imageList = imageUploadResult.map((upload) => ({
-        imageId: upload.public_id,
-        url: upload.secure_url,
-      }));
+      throw Error("Unable to get Tenant");
     }
 
     let newMaintenance = await maintenanceModel.addComplaint({
@@ -86,7 +89,7 @@ async function updateComplaint(req, res) {
       status,
     });
     if (updatedComplaint === null) {
-      throw Error("Complaint does not exists")
+      throw Error("Complaint does not exists");
     }
     return res.status(200).send({
       message: "Complaint Updated Succesfully",
