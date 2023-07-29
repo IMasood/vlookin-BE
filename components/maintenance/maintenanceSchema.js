@@ -5,12 +5,23 @@ const maintenance = new mongoose.Schema(
   {
     category: String,
     description: String,
-    images: [{url: String , imageId: String}],
+    images: [{ url: String, imageId: String }],
     complaintId: String,
     createdBy: String,
-    tenantId: { type: mongoose.Schema.Types.ObjectId, ref: "TenantModel" },
-    status: {type: Boolean, default: false}
+    tenantId: { type: mongoose.Schema.Types.ObjectId, ref: "TenantModel", required: true },
+    status: {
+      type: String,
+      enum: { values: ["HOLD", "IN PROGRESS", "PENDING", "CLOSED"] },
+      required: true,
+      validate: {
+      validator: function (status) {
+        return ["HOLD", "IN PROGRESS", "PENDING", "CLOSED"].includes(status);
+      },
+      message: 'Invalid  value. Must be one of: "HOLD", "IN PROGRESS", "PENDING", "CLOSED"',
+    },
   },
+
+    },
   { timestamps: true }
 );
 

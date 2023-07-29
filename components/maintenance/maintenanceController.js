@@ -1,28 +1,29 @@
 const maintenanceModel = require("./maintenanceModel.js");
 const tenantModel = require("../tenant/dal/tenantModel.js");
 const code_generator = require("../../services/code_generator.js");
-const { uploadToCloudinary } = require("../../services/media/uploadFile.js")
-
+const { uploadToCloudinary } = require("../../services/media/uploadFile.js");
 
 async function addComplaint(req, res) {
   try {
     let { category, description, createdBy, tenantId, status } = req.body;
-    let {images = []} = req.files
-    let imageList= []
-    let tenantDetails, complaintCount, complaintId;
-    Promise.all([
-      (tenantDetails = await tenantModel.getTenant({ id: tenantId })),
-      (complaintCount = await maintenanceModel.maintenanceCount({ tenantId })),
-    ]).then(
-      (complaintId = code_generator.complaintCode({
-        tenantId,
-        flatNo: tenantDetails.flatNo,
-        tenantContact: tenantDetails.contact, 
-        complaintCount,
-      }))
-    );
+    let { images = [] } = req.files;
+    let imageList = [];
+    let complaintId;
+      let  [tenantDetails, complaintCount] = await Promise.all([
+         tenantModel.getTenant({ id: tenantId }),
+         maintenanceModel.maintenanceCount({ tenantId }),
+       ]);
 
-
+       // Generate complaintId using the code_generator.complaintCode function
+    if (tenantDetails){
+       complaintId = code_generator.complaintCode({
+         flatNo: tenantDetails.flatNo,
+         tenantContact: tenantDetails.contact,
+         complaintCount,
+       });
+    } else {
+      throw Error('Unable to get Tenant')
+}
     //upload  images
     if (images.length) {
       let imageUploadResult = await uploadImages(images);
@@ -30,9 +31,7 @@ async function addComplaint(req, res) {
         imageId: upload.public_id,
         url: upload.secure_url,
       }));
-      
     }
-
 
     let newMaintenance = await maintenanceModel.addComplaint({
       category,
@@ -41,7 +40,7 @@ async function addComplaint(req, res) {
       tenantId,
       complaintId,
       status,
-      imageList
+      imageList,
     });
 
     res.status(200).send({
@@ -59,13 +58,12 @@ async function addComplaint(req, res) {
 
 async function getComplaints(req, res) {
   try {
-    let {id, all} = req.query
+    let { id, all } = req.query;
     let data = await maintenanceModel.getComplaints({ id, all });
-     res.status(200).send({
-       message: "Successfully fetched complaint.",
-       data: data,
-     });
-
+    res.status(200).send({
+      message: "Successfully fetched complaint.",
+      data: data,
+    });
   } catch (err) {
     res.status(500).send({
       message: "Failed to get Complaints",
@@ -74,11 +72,10 @@ async function getComplaints(req, res) {
   }
 }
 
-
 async function updateComplaint(req, res) {
   try {
     let { id } = req.query;
-    let {category, description, createdBy, tenantId, status } = req.body;
+    let { category, description, createdBy, tenantId, status } = req.body;
 
     let updatedComplaint = await maintenanceModel.updateComplaint({
       id,
@@ -88,6 +85,9 @@ async function updateComplaint(req, res) {
       tenantId,
       status,
     });
+    if (updatedComplaint === null) {
+      throw Error("Complaint does not exists")
+    }
     return res.status(200).send({
       message: "Complaint Updated Succesfully",
       status: 200,
@@ -95,7 +95,7 @@ async function updateComplaint(req, res) {
     });
   } catch (err) {
     res.status(500).send({
-      message: "Delete failed",
+      message: "Update failed",
       error: err.message,
       status: 500,
     });
@@ -122,7 +122,6 @@ async function deleteComplaint(req, res) {
 
 async function uploadImages(images) {
   try {
-    console.log("Hello")
     let imagesPromises = images.map(
       async (image) =>
         await uploadToCloudinary({

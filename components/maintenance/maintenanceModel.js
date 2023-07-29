@@ -76,7 +76,8 @@ async function updateComplaint({
         createdBy,
         tenantId,
         status,
-      }
+      },
+      { runValidators: true}
     );
     return response;
   } catch (err) {
