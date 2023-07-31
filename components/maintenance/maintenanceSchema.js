@@ -11,11 +11,18 @@ const maintenance = new mongoose.Schema(
     tenantId: { type: mongoose.Schema.Types.ObjectId, ref: "TenantModel", required: true },
     status: {
       type: String,
-      enum: { values: ["HOLD", "IN PROGRESS", "PENDING", "CLOSED"] },
+      enum: { values: ["SUBMITTED","HOLD", "IN PROGRESS", "PENDING", "CLOSED"] },
       required: true,
+      default: "SUBMITTED",
       validate: {
       validator: function (status) {
-        return ["HOLD", "IN PROGRESS", "PENDING", "CLOSED"].includes(status);
+        return [
+          "SUBMITTED",
+          "HOLD",
+          "IN PROGRESS",
+          "PENDING",
+          "CLOSED",
+        ].includes(status);
       },
       message: 'Invalid  value. Must be one of: "HOLD", "IN PROGRESS", "PENDING", "CLOSED"',
     },
