@@ -16,6 +16,7 @@ async function createUser(req, res) {
       allowMultipleBuildings,
       gender,
       userId,
+      createdBy
     } = req.body;
 
     let emailReg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
