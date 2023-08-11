@@ -10,6 +10,7 @@ async function createUser({
   allowMultipleBuildings,
   gender,
   userId,
+  createdBy,
 }) {
   try {
     let create = await User.create({
@@ -22,6 +23,7 @@ async function createUser({
       allowMultipleBuildings,
       gender,
       userId,
+      createdBy,
     });
     console.log(create);
     return create;
@@ -66,7 +68,7 @@ async function updateUser({
 }) {
   try {
     let response = await User.findOneAndUpdate(
-      { _id: id.id },
+      { _id: id },
       {
         userName,
         email,
@@ -79,6 +81,10 @@ async function updateUser({
         userId,
       }
     );
+
+    if (response === null) {
+      throw Error("User does not exists ")
+    }
     return response;
   } catch (err) {
     throw err;

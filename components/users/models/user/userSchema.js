@@ -40,7 +40,25 @@ const userSchema = new mongoose.Schema(
     },
     userId: {
       type: String,
-      unique: true
+      unique: true,
+    },
+    createdBy: {
+     role:{ type: String,
+      mutable: false,
+      default: "Self",
+        enum: ["Admin", "Self", "SuperAdmin"],
+      },
+      id: {type: String, ref: userModel}
+    },
+    OTP: {
+      type: String,
+    },
+    OTP_Expiry: {
+      type: mongoose.SchemaTypes.Date,
+    },
+    OTP_Verified: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }
@@ -57,6 +75,9 @@ userSchema.pre("save", async function (next) {
 // Compare Password
 userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
+};
+userSchema.methods.compareEmailVerificationOTP = async function (OTP) {
+  return await bcrypt.compare(OTP, this.OTP);
 };
 
 // Create and export the model

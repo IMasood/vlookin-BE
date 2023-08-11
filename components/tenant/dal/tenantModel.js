@@ -7,6 +7,8 @@ async function create({
   flatNo,
   contact,
   officeNo,
+  createdBy,
+  password,
   nationality,
   OTP_Expiry,
   OTP,
@@ -20,6 +22,8 @@ async function create({
       contact,
       officeNo,
       nationality,
+      createdBy,
+      password,
       OTP_Expiry,
       OTP,
     });
@@ -68,7 +72,7 @@ async function updateTenant({
 }) {
   try {
     let updatedTenant = await Tenant.findOneAndUpdate(
-      { _id: id.id },
+      { _id: id },
       {
         tenantName,
         email,
@@ -82,6 +86,11 @@ async function updateTenant({
         OTP_Expiry,
       }
     );
+
+    if (updatedTenant === null) {
+      throw Error("Tenant Not Found")
+    }
+
     return updatedTenant;
   } catch (err) {
     throw err;

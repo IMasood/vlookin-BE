@@ -3,14 +3,14 @@ const NODEMAILER = require("nodemailer");
 async function sendEmail({ to, html }) {
   try {
     let NodemailerTransporter = await NODEMAILER.createTransport({
-      name: "devvlookin.vlookin.com",
-      smtp: "devvlookin.vlookin.com",
+      name: "vlookin.com",
+      smtp: "vlookin.com",
       host: "box5688.bluehost.com",
       port: 587,
       service: "Bluehost",
       auth: {
-        user: "info@devvlookin.vlookin.com",
-        pass: "$^p=zc}w@%ar",
+        user: "info@vlookin.com",
+        pass: "Lookin@2k9",
       },
     });
 

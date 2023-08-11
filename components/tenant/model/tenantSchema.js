@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 // const BuildingModel = require("../../buildings/buildingSchema")
 
 // Define the schema
@@ -13,6 +14,7 @@ const tenantSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    password: { type: String },
     buildingId: {
       type: mongoose.Types.ObjectId,
       ref: "BuildingModel",
@@ -28,6 +30,15 @@ const tenantSchema = new mongoose.Schema(
     },
     nationality: {
       type: String,
+    },
+    createdBy: {
+      role: {
+        type: String,
+        mutable: false,
+        default: "Self",
+        enum: ["Admin", "Self", "SuperAdmin"],
+      },
+      id: { type: String, ref: "userModel" },
     },
     OTP: {
       type: String,
@@ -46,6 +57,18 @@ const tenantSchema = new mongoose.Schema(
 // Compare Email OTP
 tenantSchema.methods.compareEmailVerificationOTP = async function (OTP) {
   return await bcrypt.compare(OTP, this.OTP);
+};
+
+tenantSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    next();
+  }
+  this.password = await bcrypt.hash(this.password, 10);
+});
+
+// Compare Password
+tenantSchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
 };
 
 // Create and export the model
