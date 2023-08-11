@@ -11,6 +11,8 @@ async function createUser({
   gender,
   userId,
   createdBy,
+  OTP,
+  OTP_Expiry,
 }) {
   try {
     let create = await User.create({
@@ -24,6 +26,8 @@ async function createUser({
       gender,
       userId,
       createdBy,
+      OTP,
+      OTP_Expiry,
     });
     console.log(create);
     return create;
@@ -37,17 +41,17 @@ async function getUsers({ id, email, all, name }) {
   try {
     let user = null;
     let searchParams = {};
-    if (all) {
-      user = await User.find();
-      return user;
-    }
     if (id) {
       searchParams._id = id;
     }
     if (email) {
       searchParams.email = email;
     }
+    if (all) {
+      user = await User.find(searchParams);
+    }else{
     user = await User.findOne(searchParams);
+    }
     return user;
   } catch (err) {
     throw err;
@@ -79,6 +83,9 @@ async function updateUser({
         allowMultipleBuildings,
         gender,
         userId,
+        OTP_Verified,
+        OTP,
+        OTP_Expiry,
       }
     );
 
