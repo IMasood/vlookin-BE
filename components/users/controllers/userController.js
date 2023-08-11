@@ -1,6 +1,8 @@
 const userModel = require("../dal/userModel");
 const auth = require("../../../middleware/authMiddleware");
 const code_generator = require('../../../services/code_generator.js');
+const htmlTemplate = require("../../../services/emails/templates/otp");
+const sendMail = require("../../../services/emails/email");
 const OTP_EXPIRE_TIME = 5 //minutes
 const moment = require('moment')
 
