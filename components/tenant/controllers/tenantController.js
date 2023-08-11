@@ -146,7 +146,7 @@ async function deleteTenant(req, res) {
 
 async function verifyOTP(req, res) {
   try {
-    let { id, OTP } = req.body;
+    let { id, OTP } = req.query;
     //Get merchant
     let tenant = await tenantModel.getTenant({ id });
     if (tenant.OTP_Verified === true) {

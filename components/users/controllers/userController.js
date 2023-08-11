@@ -150,7 +150,7 @@ async function deleteUser(req, res) {
 
 async function verifyOTP(req, res) {
   try {
-    let { id, OTP } = req.body;
+    let { id, OTP } = req.query;
     //Get merchant
     let user = await userModel.getUsers({ id });
     if (user.OTP_Verified === true) {
