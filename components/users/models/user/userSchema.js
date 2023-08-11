@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema(
       default: "Self",
         enum: ["Admin", "Self", "SuperAdmin"],
       },
-      id: {type: String, ref: userModel}
+      id: {type: String, ref: 'userModel'}
     },
     OTP: {
       type: String,
