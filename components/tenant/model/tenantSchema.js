@@ -17,16 +17,16 @@ const tenantSchema = new mongoose.Schema(
     password: { type: String },
     buildingId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "buildingmodels",
-      exists: true,
+      ref: "BuildingModel",
+      exists: true,      
       required: true,
     },
     apartmentId: {
-      exists: true,
+      exists: true,      
       unique: true,
       required: true,
       type: mongoose.Schema.Types.ObjectId,
-      ref: "apartmentmodels",
+      ref: "ApartmentModel",
     },
     contact: {
       type: String,
