@@ -13,11 +13,14 @@ async function addApartment(req, res) {
       rooms,
       floorNo,
       comments,
-      flatNo,
+      flatNo = [],
       noOfApartments,
     } = req.body;
 
     //to verify if apartment is already added to record
+    if ( flatNo.length !== noOfApartments) {
+      throw Error("Please provide a flat number for each flat record")
+    }
     let checkFlatExistence = await apartmentModel.getApartment({
       buildingId,
       all: true,
@@ -50,13 +53,13 @@ async function addApartment(req, res) {
       });
     }
     let newApartment = await apartmentModel.addApartment(apartmentArray);
-    res.send({
+    res.status(200).send({
       status: 200,
       message: "Apartment Successfully Added",
       data: newApartment,
     });
   } catch (err) {
-    res.send({
+    res.status(500).send({
       status: 500,
       message: err.message,
     });

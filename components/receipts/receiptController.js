@@ -31,13 +31,13 @@ async function createReceipt(req, res) {
     let newReceiptTable = await receiptTableModel.addTableLines(receiptTable);
 
 
-    res.send({
+    res.status(200).send({
       status: 200,
       message: "Receipt successfully added",
-      data: {Receipt: newReceipt , ReceiptTable: newReceiptTable},
+      data: { Receipt: newReceipt, ReceiptTable: newReceiptTable },
     });
   } catch (err) {
-    res.send({
+    res.status(500).send({
       status: 500,
       message: err.message,
     });

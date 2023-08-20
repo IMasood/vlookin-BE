@@ -13,7 +13,7 @@ async function createTenant(req, res) {
       password,
       email,
       buildingId,
-      flatNo,
+      apartmentId,
       contact,
       officeNo,
       nationality,
@@ -37,7 +37,7 @@ async function createTenant(req, res) {
       email,
       password,
       buildingId,
-      flatNo,
+      apartmentId,
       contact,
       officeNo,
       nationality,
@@ -69,8 +69,14 @@ async function createTenant(req, res) {
 
 async function getTenant(req, res) {
   try {
-    let { id, email, all } = req.query;
-    let response = await tenantModel.getTenant({ id, email, all });
+    let { id, email, buildingId, apartmentId,  all } = req.query;
+    let response = await tenantModel.getTenant({
+      id,
+      email,
+      buildingId,
+      apartmentId,
+      all,
+    });
     console.log(response);
     if (response) {
       res.status(200).send({
@@ -94,7 +100,8 @@ async function updateTenant(req, res) {
     let {
       tenantName,
       email,
-      buildingName,
+      buildingId,
+      apartmentId,
       flatNo,
       contact,
       officeNo,
@@ -107,7 +114,8 @@ async function updateTenant(req, res) {
       id,
       tenantName,
       email,
-      buildingName,
+      buildingId,
+      apartmentId,
       flatNo,
       contact,
       officeNo,

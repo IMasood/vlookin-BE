@@ -4,7 +4,7 @@ async function create({
   tenantName,
   email,
   buildingId,
-  flatNo,
+  apartmentId,
   contact,
   officeNo,
   createdBy,
@@ -18,7 +18,7 @@ async function create({
       tenantName,
       email,
       buildingId,
-      flatNo,
+      apartmentId,
       contact,
       officeNo,
       nationality,
@@ -27,13 +27,13 @@ async function create({
       OTP_Expiry,
       OTP,
     });
-    return ({data: addTenant, status:200});
+    return { data: addTenant, status: 200 };
   } catch (err) {
     throw err;
   }
 }
 
-async function getTenant({ id, email, all }) {
+async function getTenant({ id, email, buildingId, apartmentId, all }) {
   try {
     let where = {};
     let data;
@@ -43,14 +43,23 @@ async function getTenant({ id, email, all }) {
     if (email) {
       where.email = email;
     }
+    if (buildingId && all) {
+      where.buildingId = buildingId;
+    }
+    if (apartmentId && all) {
+      where.apartmentId = apartmentId;
+    }
     if (all) {
       data = await Tenant.find(where).populate("buildingId", [
         "buildingName",
         "buildingCode",
-      ]);
+      ]).populate("apartmentId", ["flatNo"]);
       return data;
     }
-    data = await Tenant.findOne(where).populate("buildingId" , ["buildingName","buildingCode"]);
+    data = await Tenant.findOne(where).populate("buildingId", [
+      "buildingName",
+      "buildingCode",
+    ]).populate("apartmentId", ["flatNo"]);
     return data;
   } catch (err) {
     throw err;
@@ -61,7 +70,8 @@ async function updateTenant({
   id,
   tenantName,
   email,
-  buildingName,
+  buildingId,
+  apartmentId,
   flatNo,
   contact,
   officeNo,
@@ -76,7 +86,8 @@ async function updateTenant({
       {
         tenantName,
         email,
-        buildingName,
+        buildingId,
+        apartmentId,
         flatNo,
         contact,
         officeNo,
@@ -88,7 +99,7 @@ async function updateTenant({
     );
 
     if (updatedTenant === null) {
-      throw Error("Tenant Not Found")
+      throw Error("Tenant Not Found");
     }
 
     return updatedTenant;

@@ -23,13 +23,13 @@ async function createBuilding(req, res) {
       fullName,
       facilities,
     });
-    res.send({
+    res.status(200).send({
       status: 200,
       message: "building successfully added",
       data: newBuilding,
     });
   } catch (err) {
-    res.send({
+    res.status(500).send({
       status: 500,
       message: err.message,
     });
