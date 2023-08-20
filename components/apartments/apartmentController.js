@@ -147,9 +147,27 @@ async function deleteApartment(req, res) {
   }
 }
 
+async function apartmentWithDetails(req,res){
+  try {
+
+    let { apartmentId } = req.query
+    let response = await apartmentModel.apartmentWithBuildingAndTenant({id: apartmentId})
+    res.status(200).send({
+      message: "Details fetched",
+      data: response
+    })
+  } catch (err) {
+    res.status(500).send({
+      message: "failed to get apaetment details",
+      error: err.message
+    })
+  }
+}
+
 module.exports = {
   addApartment,
   getApartment,
   updateApartment,
   deleteApartment,
+  apartmentWithDetails,
 };

@@ -1,5 +1,5 @@
 const Apartment = require("./apartmentSchema");
-
+const mongoose = require('mongoose');
 async function addApartment(apartments) {
   try {
     let newApartment;
@@ -81,9 +81,43 @@ async function deleteApartment({ id }) {
   }
 }
 
+async function apartmentWithBuildingAndTenant({ id }) {
+  try {
+    console.log(id)
+    let apartmentDetails = await Apartment.aggregate([
+      {
+        $match: { _id: new mongoose.Types.ObjectId(id) },
+      },
+
+      {
+        $lookup: {
+          from: "buildingmodels",
+          localField: "buildingId",
+          foreignField: "_id",
+          as: "buildingDetails",
+        },
+      },
+      {
+        $lookup: {
+          from: "tenantmodels",
+          localField: "_id",
+          foreignField: "apartmentId",
+          as: "tenantDetails",
+        },
+      },
+    ]);
+    return apartmentDetails;
+  } catch (err) {
+    throw err;
+  }
+}
+
+
+
 module.exports = {
-    addApartment,
-    getApartment,
-    updateApartment,
-    deleteApartment
+  addApartment,
+  getApartment,
+  updateApartment,
+  deleteApartment,
+  apartmentWithBuildingAndTenant,
 };

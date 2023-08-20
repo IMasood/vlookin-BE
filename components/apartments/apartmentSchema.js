@@ -5,7 +5,7 @@ const apartmentSchema = new mongoose.Schema(
   {
     buildingId: {
       type: mongoose.Types.ObjectId,
-      ref: "BuildingModel",
+      ref: "buildingmodels",
       required: true,
     },
     flatNo: {
@@ -30,8 +30,8 @@ const apartmentSchema = new mongoose.Schema(
     balcony: {
       type: Boolean,
     },
-    isStudio:{type:Boolean},
-    floorNo:{type:String},
+    isStudio: { type: Boolean },
+    floorNo: { type: String },
     rooms: {
       bedRoom: { type: Number, default: 0 },
       dining: { type: Number, default: 0 },
