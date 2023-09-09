@@ -1,10 +1,10 @@
 const userModel = require("../dal/userModel");
 const auth = require("../../../middleware/authMiddleware");
-const code_generator = require('../../../services/code_generator.js');
+const code_generator = require("../../../services/code_generator.js");
 const htmlTemplate = require("../../../services/emails/templates/otp");
 const sendMail = require("../../../services/emails/email");
-const OTP_EXPIRE_TIME = 5 //minutes
-const moment = require('moment')
+const OTP_EXPIRE_TIME = 5; //minutes
+const moment = require("moment");
 
 async function createUser(req, res) {
   try {
@@ -18,11 +18,11 @@ async function createUser(req, res) {
       allowMultipleBuildings,
       gender,
       userId,
-      createdBy
+      createdBy,
     } = req.body;
 
     let emailReg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
-    let contactRegex = /^(?:\+971|0)(?:\d{1,2})?\d{7}$/
+    let contactRegex = /^(?:\+971|0)(?:\d{1,2})?\d{7}$/;
 
     if (!emailReg.test(email) || !contactRegex.test(contact)) {
       return res.status(400).send({
@@ -56,17 +56,17 @@ async function createUser(req, res) {
       OTP_Expiry,
     });
     if (userCreated) {
-    res.status(200).send({
-      success: true,
-      message: "User created successfully",
-    });
+      res.status(200).send({
+        success: true,
+        message: "User created successfully",
+      });
     }
   } catch (error) {
     console.log(error.message);
     res.status(500).send({
       success: false,
       data: null,
-      message: "Failed to create user",
+      message: "Failed to create user" + error.message,
     });
   }
 }
@@ -102,7 +102,7 @@ async function updateUser(req, res) {
       userId,
     } = req.body;
 
-    let {id} = req.query;
+    let { id } = req.query;
 
     let response = await userModel.updateUser({
       id,
