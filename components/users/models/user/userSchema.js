@@ -43,12 +43,13 @@ const userSchema = new mongoose.Schema(
       unique: true,
     },
     createdBy: {
-     role:{ type: String,
-      mutable: false,
-      default: "Self",
+      role: {
+        type: String,
+        mutable: false,
+        default: "Self",
         enum: ["Admin", "Self", "SuperAdmin"],
       },
-      id: {type: String, ref: 'userModel'}
+      id: { type: mongoose.Schema.Types.ObjectId, ref: "userModel" },
     },
     OTP: {
       type: String,

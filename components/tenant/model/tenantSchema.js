@@ -18,11 +18,11 @@ const tenantSchema = new mongoose.Schema(
     buildingId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "BuildingModel",
-      exists: true,      
+      exists: true,
       required: true,
     },
     apartmentId: {
-      exists: true,      
+      exists: true,
       unique: true,
       required: true,
       type: mongoose.Schema.Types.ObjectId,
@@ -44,7 +44,7 @@ const tenantSchema = new mongoose.Schema(
         default: "Self",
         enum: ["Admin", "Self", "SuperAdmin"],
       },
-      id: { type: String, ref: "userModel" },
+      id: { type: mongoose.Schema.Types.ObjectId, ref: "userModel" },
     },
     OTP: {
       type: String,

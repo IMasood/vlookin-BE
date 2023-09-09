@@ -33,7 +33,7 @@ async function createUser({
     return create;
   } catch (err) {
     console.log("User creation failed", err.message);
-    return "err:", { message: err.message };
+    throw (`"err"+ ${err.message }`);
   }
 }
 

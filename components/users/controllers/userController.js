@@ -55,11 +55,12 @@ async function createUser(req, res) {
       OTP: emailVerificationOTP.hashedOTP,
       OTP_Expiry,
     });
-
+    if (userCreated) {
     res.status(200).send({
       success: true,
       message: "User created successfully",
     });
+    }
   } catch (error) {
     console.log(error.message);
     res.status(500).send({
