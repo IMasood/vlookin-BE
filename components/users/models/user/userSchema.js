@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema(
     allowMultipleBuildings: {
       type: Boolean,
     },
-    allowCRM: {
+    allowAMS: {
       type: Boolean,
       default: false,
     },

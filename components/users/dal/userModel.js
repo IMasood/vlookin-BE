@@ -13,7 +13,7 @@ async function createUser({
   createdBy,
   OTP,
   OTP_Expiry,
-  allowCRM,
+  allowAMS,
 }) {
   try {
     let create = await User.create({
@@ -29,7 +29,7 @@ async function createUser({
       createdBy,
       OTP,
       OTP_Expiry,
-      allowCRM,
+      allowAMS,
     });
     console.log(create);
     return create;
@@ -69,7 +69,7 @@ async function updateUser({
   role,
   allowSubUsers,
   allowMultipleBuildings,
-  allowCRM,
+  allowAMS,
   gender,
   userId,
 }) {
@@ -84,7 +84,7 @@ async function updateUser({
         role,
         allowSubUsers,
         allowMultipleBuildings,
-        allowCRM,
+        allowAMS,
         gender,
         userId,
         OTP_Verified,

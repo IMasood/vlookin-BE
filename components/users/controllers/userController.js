@@ -16,7 +16,7 @@ async function createUser(req, res) {
       role,
       allowSubUsers,
       allowMultipleBuildings,
-      allowCRM,
+      allowAMS,
       gender,
       userId,
       createdBy,
@@ -50,7 +50,7 @@ async function createUser(req, res) {
       role,
       allowSubUsers,
       allowMultipleBuildings,
-      allowCRM,
+      allowAMS,
       gender,
       userId,
       createdBy,
@@ -100,7 +100,7 @@ async function updateUser(req, res) {
       role,
       allowSubUsers,
       allowMultipleBuildings,
-      allowCRM,
+      allowAMS,
       gender,
       userId,
     } = req.body;
@@ -118,7 +118,7 @@ async function updateUser(req, res) {
       allowMultipleBuildings,
       gender,
       userId,
-      allowCRM,
+      allowAMS,
     });
 
     if (response !== null) {
