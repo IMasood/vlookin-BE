@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       required: true,
+      enum: ["Admin", "SuperAdmin"],
     },
     password: {
       type: String,
@@ -34,6 +35,10 @@ const userSchema = new mongoose.Schema(
     },
     allowMultipleBuildings: {
       type: Boolean,
+    },
+    allowCRM: {
+      type: Boolean,
+      default: false,
     },
     status: {
       type: Boolean,
