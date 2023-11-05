@@ -14,6 +14,7 @@ async function createUser({
   OTP,
   OTP_Expiry,
   allowAMS,
+  realEstate
 }) {
   try {
     let create = await User.create({
@@ -30,6 +31,7 @@ async function createUser({
       OTP,
       OTP_Expiry,
       allowAMS,
+      realEstate,
     });
     console.log(create);
     return create;
@@ -39,7 +41,7 @@ async function createUser({
   }
 }
 
-async function getUsers({ id, email, all, name }) {
+async function getUsers({ id, email, all, realEstate }) {
   try {
     let user = null;
     let searchParams = {};
@@ -49,10 +51,13 @@ async function getUsers({ id, email, all, name }) {
     if (email) {
       searchParams.email = email;
     }
+    if (realEstate) {
+      searchParams.realEstate = realEstate;
+    }
     if (all) {
       user = await User.find(searchParams);
-    }else{
-    user = await User.findOne(searchParams);
+    } else {
+      user = await User.findOne(searchParams);
     }
     return user;
   } catch (err) {

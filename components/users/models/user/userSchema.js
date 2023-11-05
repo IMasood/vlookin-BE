@@ -8,6 +8,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    realEstate: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     email: {
       type: String,
       required: [true, "Please Enter Your Email"],

@@ -20,6 +20,7 @@ async function createUser(req, res) {
       gender,
       userId,
       createdBy,
+      realEstate,
     } = req.body;
 
     let emailReg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
@@ -56,6 +57,7 @@ async function createUser(req, res) {
       createdBy,
       OTP: emailVerificationOTP.hashedOTP,
       OTP_Expiry,
+      realEstate,
     });
     if (userCreated) {
       res.status(200).send({
@@ -75,8 +77,14 @@ async function createUser(req, res) {
 
 async function getUsers(req, res) {
   try {
-    let { id, all, email, name } = req.query;
-    let userData = await userModel.getUsers({ id, all, email, name });
+    let { id, all, email, name, realEstate } = req.query;
+    let userData = await userModel.getUsers({
+      id,
+      all,
+      email,
+      name,
+      realEstate,
+    });
     res.send({
       status: 200,
       message: "Data fetched successfully",
