@@ -23,6 +23,9 @@ npm-debug.log*
 # Ignore yarn lock file
 yarn.lock
 
+.package-lock.json
+package-lock
+
 # Ignore IDE-specific files
 .idea/
 *.iml
@@ -31,4 +34,3 @@ yarn.lock
 coverage/
 
 # Ignore any other files or directories specific to your project
-

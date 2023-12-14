@@ -22,8 +22,9 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      required: true,
-      enum: ["Admin", "SuperAdmin"],
+      required: [true, "Please Select role"],
+      enum: ["admin", "superAdmin", 'tenant', 'visitor', 'maintenance'],
+      trim: true
     },
     password: {
       type: String,
@@ -56,8 +57,8 @@ const userSchema = new mongoose.Schema(
       role: {
         type: String,
         mutable: false,
-        default: "Self",
-        enum: ["Admin", "Self", "SuperAdmin"],
+        default: "self",
+        // enum: ["admin", "self", "superAdmin"],
       },
       id: { type: mongoose.Schema.Types.ObjectId, ref: "userModel" },
     },
