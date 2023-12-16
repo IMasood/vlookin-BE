@@ -10,11 +10,11 @@ async function addBuilding({
   landmark,
   fullName,
   facilities,
-  realEstateCode
+  realEstateId
 }) {
 
   try {
-    const realEstate = await RealEstate.findOne({ code: realEstateCode });
+    const realEstate = await RealEstate.findOne({ _id: realEstateId });
     if (!realEstate) {
       return res.status(404).json({ message: 'Real Estate not found' });
     }

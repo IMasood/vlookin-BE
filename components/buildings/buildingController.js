@@ -11,7 +11,7 @@ async function createBuilding(req, res) {
       landmark,
       fullName,
       facilities,
-      realEstateCode
+     realEstateId
     } = req.body;
 
     let buildingCode = code_generator.buildingCode(buildingName);
@@ -24,7 +24,7 @@ async function createBuilding(req, res) {
       landmark,
       fullName,
       facilities,
-      realEstateCode
+     realEstateId
     });
     res.status(200).send({
       status: 200,
