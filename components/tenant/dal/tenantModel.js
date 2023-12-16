@@ -12,6 +12,8 @@ async function create({
   nationality,
   OTP_Expiry,
   OTP,
+  joiningDate,
+  creationDate
 }) {
   try {
     let addTenant = await Tenant.create({
@@ -26,9 +28,12 @@ async function create({
       password,
       OTP_Expiry,
       OTP,
+      joiningDate,
+      creationDate
     });
     return { data: addTenant, status: 200 };
   } catch (err) {
+    console.log(err);
     throw err;
   }
 }
