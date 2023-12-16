@@ -13,12 +13,13 @@ async function addApartment(req, res) {
       rooms,
       floorNo,
       comments,
-      flatNo = [],
+      flatNo,
       noOfApartments,
     } = req.body;
-
+    console.log(req.body, 'requess')
     //to verify if apartment is already added to record
     if ( flatNo.length !== noOfApartments) {
+      console.log(flatNo.length, noOfApartments, 'chhh')
       throw Error("Please provide a flat number for each flat record")
     }
     let checkFlatExistence = await apartmentModel.getApartment({
