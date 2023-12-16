@@ -15,8 +15,8 @@ const realEstateSchema = new mongoose.Schema(
       unique: true,
     },
     building:{
-        type:buildingSchema,
-        required:true
+      type:mongoose.Schema.Types.ObjectId,
+      ref: "BuildingModel",
     }
   },
   { timestamps: true }

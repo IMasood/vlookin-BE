@@ -11,6 +11,7 @@ var buildingRouter = require("./components/buildings/routes.js");
 var apartmentRouter = require("./components/apartments/routes.js");
 var receiptRouter = require("./components/receipts/routes.js");
 var maintenanceRouter = require("./components/maintenance/routes.js");
+var realEstateRouter = require("./components/realEstate/routes.js");
 var cors = require("cors");
 
 app.use(morgan("dev"));
@@ -25,6 +26,7 @@ app.use("/building", buildingRouter);
 app.use("/apartment", apartmentRouter);
 app.use("/receipt", receiptRouter);
 app.use("/maintenance", maintenanceRouter);
+app.use("/realEstate", realEstateRouter)
 
 config.connectDatabase();
 const port = 4000; // Set the port number you want to use

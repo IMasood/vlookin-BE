@@ -27,7 +27,10 @@ const buildingSchema = new mongoose.Schema(
     landmark: {
       type: String,
     },
-    facilities : [{type: String}]
+    facilities : [{type: String}],
+    realEstateId:{
+      type: String
+    }
   },
   { timestamps: true }
 );

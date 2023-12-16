@@ -14,7 +14,6 @@ async function addApartment(apartments) {
 
 async function getApartment({all, id, buildingId}) {
   try {
-    console.log(buildingId);
     let where = {}
     let response
     if(id){

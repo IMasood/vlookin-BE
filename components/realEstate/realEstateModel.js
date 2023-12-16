@@ -1,12 +1,13 @@
 const RealEstate = require("./realEstateSchema");
+
 async function addRealEstate({
-  buildingName,
-  buildingCode,
+  name,
+  code,
 }) {
   try {
     let newRealEstate = RealEstate.create({
-      buildingName,
-      buildingCode,
+      name,
+      code,
     });
 
     return newRealEstate;
@@ -15,7 +16,7 @@ async function addRealEstate({
   }
 }
 
-async function getRealEstates({all, id}){
+async function getRealEstate({all, id}){
   try {
     let where = {};
     let response;
@@ -36,13 +37,13 @@ async function getRealEstates({all, id}){
 }
 async function updateRealEstate({
   id,
-  buildingName,
+  name,
 }) {
   try {
     let response = await RealEstate.findOneAndUpdate(
       { _id: id },
       {
-        buildingName,
+        name,
       }
     );
     return response;
@@ -64,7 +65,7 @@ async function deleteRealEstate({id}){
 
 module.exports = {
   addRealEstate,
-  getRealEstates,
+  getRealEstate,
   updateRealEstate,
   deleteRealEstate
 };

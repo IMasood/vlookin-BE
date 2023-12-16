@@ -1,4 +1,5 @@
 const Building = require("./buildingSchema");
+const RealEstate = require("../realEstate/realEstateSchema");
 
 async function addBuilding({
   buildingName,
@@ -8,9 +9,15 @@ async function addBuilding({
   watchman,
   landmark,
   fullName,
-  facilities
+  facilities,
+  realEstateCode
 }) {
+
   try {
+    const realEstate = await RealEstate.findOne({ code: realEstateCode });
+    if (!realEstate) {
+      return res.status(404).json({ message: 'Real Estate not found' });
+    }
     let newBuilding = Building.create({
       buildingName,
       buildingCode,
@@ -20,15 +27,15 @@ async function addBuilding({
       landmark,
       fullName,
       facilities,
+      realEstateId: realEstate._id
     });
-
     return newBuilding;
   } catch (err) {
     throw err;
   }
 }
 
-async function getBuilding({all, id}){
+async function getBuilding({all, id, realEstateId}){
   try {
     let where = {};
     let response;
@@ -38,6 +45,9 @@ async function getBuilding({all, id}){
     }
     if (id) {
       where._id = id;
+    }
+    if(realEstateId){
+      where.realEstateId = realEstateId
     }
     response = await Building.findOne(where)
     return response

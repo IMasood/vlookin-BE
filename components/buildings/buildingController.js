@@ -1,5 +1,6 @@
 const buildingModel = require("./buildingModel");
 const code_generator = require("../../services/code_generator");
+
 async function createBuilding(req, res) {
   try {
     let {
@@ -10,6 +11,7 @@ async function createBuilding(req, res) {
       landmark,
       fullName,
       facilities,
+      realEstateCode
     } = req.body;
 
     let buildingCode = code_generator.buildingCode(buildingName);
@@ -22,6 +24,7 @@ async function createBuilding(req, res) {
       landmark,
       fullName,
       facilities,
+      realEstateCode
     });
     res.status(200).send({
       status: 200,
@@ -38,8 +41,8 @@ async function createBuilding(req, res) {
 
 async function getBuilding(req, res) {
   try {
-    let { all, id } = req.query;
-    let result = await buildingModel.getBuilding({ all, id });
+    let { all, id, realEstateId } = req.query;
+    let result = await buildingModel.getBuilding({ all, id, realEstateId });
 
     res.status(200).send({
       status: 200,
