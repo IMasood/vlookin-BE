@@ -14,7 +14,7 @@ const tenantSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    password: { type: String },
+    // password: { type: String },
     buildingId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "BuildingModel",
