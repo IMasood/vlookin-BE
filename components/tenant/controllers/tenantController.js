@@ -18,7 +18,11 @@ async function createTenant(req, res) {
       officeNo,
       nationality,
       createdBy,
+      joiningDate,
+      creationDate    
+      
     } = req.body;
+    console.log(req.body, 'requestttttttt')
 
     let emailReg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
     let contactRegex = /^(?:\+971|0)(?:\d{1,2})?\d{7}$/;
@@ -44,11 +48,13 @@ async function createTenant(req, res) {
       createdBy,
       OTP: emailVerificationOTP.hashedOTP,
       OTP_Expiry,
+      joiningDate,
+      creationDate    
     });
 
     if (response.status == 200) {
       let html = htmlTemplate.otp_email({ otp: emailVerificationOTP.OTP_Code });
-      let sendEmailResponse = await sendMail.sendEmail({ html, to: email });
+      // let sendEmailResponse = await sendMail.sendEmail({ html, to: email });
       // let sendSMSResponse = await sendSMS.send_otp_sms({
       //   otp: emailVerificationOTP.OTP_Code,
       //   // sms_contact: [contact],SMS Sending Temporarily disabled due to development environment
@@ -60,6 +66,7 @@ async function createTenant(req, res) {
       });
     }
   } catch (err) {
+    console.log(err);
     res.status(500).send({
       message: ("Failed to add Tenant", err.message),
       status: 500,

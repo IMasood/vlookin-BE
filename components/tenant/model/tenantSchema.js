@@ -56,6 +56,12 @@ const tenantSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    joiningDate: { 
+      type: mongoose.SchemaTypes.Date,
+    },
+    creationDate: { 
+      type: mongoose.SchemaTypes.Date,
+    },
   },
   { timestamps: true }
 );
