@@ -25,7 +25,6 @@ async function addComplaint(req, res) {
       maintenanceModel.maintenanceCount({ tenantId }),
     ]);
     // Generate complaintId using the code_generator.complaintCode function
-    console.log(tenantDetails,  'tennat details');
     if (tenantDetails) {
         complaintId = code_generator.complaintCode({
         flatNo: tenantDetails.apartmentId.flatNo,
@@ -52,7 +51,6 @@ async function addComplaint(req, res) {
       data: newMaintenance,
     });
   } catch (err) {
-    console.log(err.message);
     res.status(500).send({
       response: "failed to add complaint",
       message: err.message,
