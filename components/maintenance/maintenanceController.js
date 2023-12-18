@@ -24,9 +24,10 @@ async function addComplaint(req, res) {
       tenantModel.getTenant({ id: tenantId }),
       maintenanceModel.maintenanceCount({ tenantId }),
     ]);
+
     // Generate complaintId using the code_generator.complaintCode function
     if (tenantDetails) {
-        complaintId = code_generator.complaintCode({
+      complaintId = code_generator.complaintCode({
         flatNo: tenantDetails.apartmentId.flatNo,
         tenantContact: tenantDetails.contact,
         complaintCount,
@@ -34,7 +35,6 @@ async function addComplaint(req, res) {
     } else {
       throw Error("Unable to get Tenant");
     }
-    return('stop');
 
     let newMaintenance = await maintenanceModel.addComplaint({
       category,
@@ -51,6 +51,7 @@ async function addComplaint(req, res) {
       data: newMaintenance,
     });
   } catch (err) {
+    console.log(err.message);
     res.status(500).send({
       response: "failed to add complaint",
       message: err.message,
