@@ -24,17 +24,18 @@ async function addComplaint(req, res) {
       tenantModel.getTenant({ id: tenantId }),
       maintenanceModel.maintenanceCount({ tenantId }),
     ]);
-
     // Generate complaintId using the code_generator.complaintCode function
+    console.log(tenantDetails,  'tennat details');
     if (tenantDetails) {
-      complaintId = code_generator.complaintCode({
-        flatNo: tenantDetails.flatNo,
+        complaintId = code_generator.complaintCode({
+        flatNo: tenantDetails.apartmentId.flatNo,
         tenantContact: tenantDetails.contact,
         complaintCount,
       });
     } else {
       throw Error("Unable to get Tenant");
     }
+    return('stop');
 
     let newMaintenance = await maintenanceModel.addComplaint({
       category,
