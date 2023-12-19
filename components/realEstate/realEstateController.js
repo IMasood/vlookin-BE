@@ -4,11 +4,11 @@ const code_generator = require("../../services/code_generator");
 async function createRealEstate(req, res) {
   try {
     let {
-      name,
-      code
+      name
     } = req.body;
 
-    let realEstateCode = code_generator.buildingCode(name);
+    let code = code_generator.buildingCode(name);
+    console.log(code, 'code');
     let newRealEstate = await realEstateModel.addRealEstate({
       name,
       code,
