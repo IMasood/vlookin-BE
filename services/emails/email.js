@@ -1,23 +1,28 @@
 const NODEMAILER = require("nodemailer");
+const dotenv = require("dotenv");
+const constants = require("../../config_files/constants")
+dotenv.config();
+
 
 async function sendEmail({ to, html }) {
   try {
+    console.log(process.env.EMAIL, 'checking config')
     let NodemailerTransporter = await NODEMAILER.createTransport({
-      name: "vlookin.com",
-      smtp: "vlookin.com",
-      host: "box5688.bluehost.com",
-      port: 587,
-      service: "Bluehost",
+      name: constants.node_mailer.name,
+      smtp: constants.node_mailer.name,
+      host: constants.node_mailer.host,
+      port: 465,
       auth: {
-        user: "info@vlookin.com",
-        pass: "Lookin@2k9",
+        user: process.env.BLUE_HOST_EMAIL,
+        pass: process.env.BLUE_HOST_EMAIL_PASSWORD,
       },
+      secure : true
     });
 
     let mailOptions = {
       to: to,
       from: "VLOOKIN <info@devvlookin.vlookin.com>",
-      subject: "Vlookin SignUp",
+      subject: "OTP Verification",
       html: html,
     };
 

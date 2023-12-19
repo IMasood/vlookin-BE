@@ -3,7 +3,7 @@ const code_generator = require("../../../services/code_generator");
 const htmlTemplate = require("../../../services/emails/templates/otp");
 const sendMail = require("../../../services/emails/email");
 const sendSMS = require("../../../services/sms/sms");
-const OTP_EXPIRE_TIME = 2; //Minutes
+const OTP_EXPIRE_TIME = 5; //Minutes
 const moment = require("moment");
 
 async function createTenant(req, res) {
@@ -54,7 +54,7 @@ async function createTenant(req, res) {
 
     if (response.status == 200) {
       let html = htmlTemplate.otp_email({ otp: emailVerificationOTP.OTP_Code });
-      // let sendEmailResponse = await sendMail.sendEmail({ html, to: email });
+      let sendEmailResponse = await sendMail.sendEmail({ html, to: email });
       // let sendSMSResponse = await sendSMS.send_otp_sms({
       //   otp: emailVerificationOTP.OTP_Code,
       //   // sms_contact: [contact],SMS Sending Temporarily disabled due to development environment
@@ -170,7 +170,7 @@ async function verifyOTP(req, res) {
     //Validate OTP expiration time
     let isOTPValid = moment().isBefore(tenant?.OTP_Expiry);
     let isOTPMatched = await tenant.compareEmailVerificationOTP(OTP);
-
+    console.log('otpssssssssssssssssssssssss', isOTPMatched, isOTPMatched)
     if (!isOTPValid || !isOTPMatched) {
       return res.status(401).send({
         success: false,
@@ -182,10 +182,11 @@ async function verifyOTP(req, res) {
         id ,
         OTP_Verified: true,
       });
-      if (result.OTP_Verified === true) {
-        res
-          .status(200)
-          .send({ success: true, message: "Email verified successfully" });
+      console.log(result, 'ress')
+      if (result?.OTP_Verified) {
+        console.log('iffffff')
+
+        res.status(200).send({ success: true, message: "Email verified successfully" });
       }
     }
   } catch (err) {
