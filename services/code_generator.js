@@ -34,11 +34,27 @@ async function OTP_generator() {
 
 }
 
+function generateRandomTwoDigitNumber() {
+  return Math.floor(Math.random() * 100).toString().padStart(2, '0');
+}
 
+function realEstateCode(realEstateName) {
+  const words = realEstateName.toUpperCase().split(" ");
+  let code = "RE-" + words[0].slice(0, 2); // Take the first two letters
+
+  if (words.length > 1) {
+      words.slice(1).forEach(word => {
+          code += word.charAt(0); // Add first letter of subsequent words
+      });
+  }
+  // If the code length is greater than 4, truncate it
+  return code.slice(0, 6);
+}
 
 
 module.exports = {
   buildingCode,
   OTP_generator,
-  complaintCode
+  complaintCode,
+  realEstateCode
 };

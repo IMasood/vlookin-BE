@@ -7,8 +7,7 @@ async function createRealEstate(req, res) {
       name
     } = req.body;
 
-    let code = code_generator.buildingCode(name);
-    console.log(code, 'code');
+    let code = code_generator.realEstateCode(name);
     let newRealEstate = await realEstateModel.addRealEstate({
       name,
       code,
