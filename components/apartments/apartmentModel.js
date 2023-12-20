@@ -16,6 +16,7 @@ async function getApartment({all, id, buildingId}) {
   try {
     let where = {}
     let response
+    let projection = {name: 1 , _id: 1, flatNo: 1, floorNo:1}
     if(id){
       where._id = id
     }
@@ -25,6 +26,11 @@ async function getApartment({all, id, buildingId}) {
     
     if (all) {
       response = await Apartment.find(where).populate("buildingId", ["buildingName","buildingCode"]);
+      return response
+    }
+    if(buildingId){
+      response = await Apartment.find(where, projection);
+      console.log(response, 'apartment response');
       return response
     }
     response = await Apartment.findOne(where).populate("buildingId", [
