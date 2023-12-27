@@ -21,6 +21,7 @@ async function createUser(req, res) {
       userId,
       createdBy,
       realEstate,
+      buildingId
     } = req.body;
 
     let emailReg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
@@ -58,6 +59,7 @@ async function createUser(req, res) {
       OTP: emailVerificationOTP.hashedOTP,
       OTP_Expiry,
       realEstate,
+      buildingId
     });
     if (userCreated) {
       res.status(200).send({

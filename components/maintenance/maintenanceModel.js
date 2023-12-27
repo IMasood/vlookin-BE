@@ -35,17 +35,29 @@ async function maintenanceCount({ tenantId, buildingId, flatNo }) {
     throw err;
   }
 } 
-async function getComplaints({all, id}){
+async function getComplaints({all, id, tenantId}){
   try {
     let where = {};
     let response;
     if (id) {
       where._id = id;
     }
+    if(tenantId) {
+      console.log(tenantId);
+      where.tenantId._id = tenantId
+    }
+
     if (all) {
       response = await Maintenance.find(where).populate('tenantId', ['tenantName','contact', 'flatNo', 'email']);
       return response;
     }
+
+    if(tenantId) {
+      response = await Maintenance.find(tenantId).populate('tenantId', ['tenantName','contact', 'flatNo', 'email']);
+      console.log(response);
+      return response;
+    }
+
     response = await Maintenance.findOne(where).populate("tenantId", [
       "tenantName",
       "contact",

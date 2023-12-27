@@ -72,6 +72,11 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    buildingId:{
+      type: String,
+      required: true,
+      unique: true,
+    }
   },
   { timestamps: true }
 );

@@ -7,7 +7,7 @@ async function addComplaint(req, res) {
   try {
     let { category, description, createdBy, tenantId, status } = req.body;
     let imageList = [];
-
+    console.log(req, 'requestttttttttttt')
     if (req.files) {
       let { images = [] } = req.files;
       //upload  images
@@ -61,8 +61,8 @@ async function addComplaint(req, res) {
 
 async function getComplaints(req, res) {
   try {
-    let { id, all } = req.query;
-    let data = await maintenanceModel.getComplaints({ id, all });
+    let { id, all, tenantId } = req.query;
+    let data = await maintenanceModel.getComplaints({ id, all, tenantId });
     res.status(200).send({
       message: "Successfully fetched complaint.",
       data: data,

@@ -29,8 +29,10 @@ const buildingSchema = new mongoose.Schema(
     },
     facilities : [{type: String}],
     realEstateId:{
-      type: String
+      type: String,
+      unique:true
     }
+
   },
   { timestamps: true }
 );

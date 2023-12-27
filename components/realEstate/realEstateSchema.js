@@ -14,7 +14,7 @@ const realEstateSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    building:{
+    buildingId:{
       type:mongoose.Schema.Types.ObjectId,
       ref: "BuildingModel",
     }

@@ -14,7 +14,8 @@ async function createUser({
   OTP,
   OTP_Expiry,
   allowAMS,
-  realEstate
+  realEstate,
+  buildingId
 }) {
   try {
     let create = await User.create({
@@ -32,6 +33,7 @@ async function createUser({
       OTP_Expiry,
       allowAMS,
       realEstate,
+      buildingId
     });
     console.log(create);
     return create;
