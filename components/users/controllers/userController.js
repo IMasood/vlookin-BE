@@ -79,13 +79,14 @@ async function createUser(req, res) {
 
 async function getUsers(req, res) {
   try {
-    let { id, all, email, name, realEstate } = req.query;
+    let { id, all, email, name, realEstate,buildingId } = req.query;
     let userData = await userModel.getUsers({
       id,
       all,
       email,
       name,
       realEstate,
+      buildingId
     });
     res.send({
       status: 200,

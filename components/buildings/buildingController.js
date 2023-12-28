@@ -56,6 +56,8 @@ async function getBuilding(req, res) {
     });
   }
 }
+
+
 async function updateBuilding(req, res) {
   try {
     let { id } = req.query;
@@ -92,6 +94,7 @@ async function updateBuilding(req, res) {
     });
   }
 }
+
 async function deleteBuilding(req, res) {
   try {
     let { id } = req.query;
@@ -103,6 +106,19 @@ async function deleteBuilding(req, res) {
       data: deleteBuilding,
     });
   } catch (err) {
+    res.status(500).send({
+      message: "Delete failed",
+      error: err.message,
+      status: 500,
+    });
+  }
+}
+
+async function getBuildingRelatedDetails(req, res){
+  try{
+    let {buildingId} = req.query;
+
+  }catch(err) {
     res.status(500).send({
       message: "Delete failed",
       error: err.message,

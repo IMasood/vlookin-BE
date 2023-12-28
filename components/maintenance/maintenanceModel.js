@@ -5,11 +5,10 @@ async function addComplaint({
     description,
     complaintId,
     createdBy,
-  tenantId,
-  status,
-  imageList
-    
-
+    tenantId,
+    status,
+    imageList,
+    buildingId
 }) {
   try {
     let newComplaint = Maintenance.create({
@@ -19,7 +18,8 @@ async function addComplaint({
       createdBy,
       tenantId,
       status,
-      images: imageList
+      images: imageList,
+      buildingId
     });
     return newComplaint;
   } catch (err) {

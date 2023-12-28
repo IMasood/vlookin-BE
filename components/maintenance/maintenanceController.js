@@ -5,7 +5,7 @@ const { uploadToCloudinary } = require("../../services/media/uploadFile.js");
 
 async function addComplaint(req, res) {
   try {
-    let { category, description, createdBy, tenantId, status } = req.body;
+    let { category, description, createdBy, tenantId, status, buildingId } = req.body;
     let imageList = [];
     console.log(req, 'requestttttttttttt')
     if (req.files) {
@@ -44,6 +44,7 @@ async function addComplaint(req, res) {
       complaintId,
       status,
       imageList,
+      buildingId
     });
 
     res.status(200).send({
@@ -62,7 +63,7 @@ async function addComplaint(req, res) {
 async function getComplaints(req, res) {
   try {
     let { id, all, tenantId } = req.query;
-    let data = await maintenanceModel.getComplaints({ id, all, tenantId });
+    let data = await maintenanceModel.getComplaints({ id, all, tenantId, buildingId });
     res.status(200).send({
       message: "Successfully fetched complaint.",
       data: data,

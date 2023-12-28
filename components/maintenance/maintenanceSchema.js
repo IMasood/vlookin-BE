@@ -27,8 +27,12 @@ const maintenance = new mongoose.Schema(
       message: 'Invalid  value. Must be one of: "HOLD", "IN PROGRESS", "PENDING", "CLOSED"',
     },
   },
-
-    },
+  buildingId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: "BuildingModel", 
+    required: true 
+  },
+  },
   { timestamps: true }
 );
 
