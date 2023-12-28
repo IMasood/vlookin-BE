@@ -48,8 +48,11 @@ async function getTenant({ id, email, buildingId, apartmentId, all }) {
     if (email) {
       where.email = email;
     }
-    if (buildingId && all) {
+    if (buildingId) {
+      let projection = {tenantName : 1, email: 1, realEstate:1, officeNo:1, contact: 1,apartmentId:1,buildingId:1}  
       where.buildingId = buildingId;
+      data = await Tenant.find(where, projection);
+      return data;      
     }
     if (apartmentId && all) {
       where.apartmentId = apartmentId;

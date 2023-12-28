@@ -1,5 +1,9 @@
 const buildingModel = require("./buildingModel");
 const code_generator = require("../../services/code_generator");
+const apartmentModel = require("../apartments/apartmentModel");
+const maintenanceModel = require("../maintenance/maintenanceModel")
+const userModel = require("../users/dal/userModel.js");
+const TenantModel = require("../tenant/dal/tenantModel");
 
 async function createBuilding(req, res) {
   try {
@@ -114,9 +118,28 @@ async function deleteBuilding(req, res) {
   }
 }
 
-async function getBuildingRelatedDetails(req, res){
+async function getSelectedBuildingDetails(req, res){
   try{
     let {buildingId} = req.query;
+    // const visitors = 
+    let apartment = await apartmentModel.getApartment({ buildingId });
+    let users = await userModel.getUsers({buildingId});
+    const tenants = await TenantModel.getTenant({buildingId});
+    const maintenance = users.filter(user => user.role === 'maintenance');
+    const visitors = users.filter(user => user.role === 'visitor');
+    let complaints = await maintenanceModel.getComplaints({buildingId});
+    let data = {
+      'apartments' : apartment,
+      'tenants' : tenants,
+      'visitors' : visitors,
+      'maintenance' : maintenance,
+      'complaints' : complaints
+    };
+    return res.status(200).send({
+      message: "Building Details Fetched Succesfully",
+      status: 200,
+      data: data,
+    });
 
   }catch(err) {
     res.status(500).send({
@@ -132,4 +155,5 @@ module.exports = {
   getBuilding,
   updateBuilding,
   deleteBuilding,
+  getSelectedBuildingDetails
 };

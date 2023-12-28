@@ -35,7 +35,7 @@ async function maintenanceCount({ tenantId, buildingId, flatNo }) {
     throw err;
   }
 } 
-async function getComplaints({all, id, tenantId}){
+async function getComplaints({all, id, tenantId, buildingId}){
   try {
     let where = {};
     let response;
@@ -45,6 +45,13 @@ async function getComplaints({all, id, tenantId}){
     if(tenantId) {
       console.log(tenantId);
       where.tenantId._id = tenantId
+    }
+
+    if (buildingId) {
+      where.buildingId = buildingId;
+      let projection = {tenantId : 1, category: 1, status:1, complaintId:1}
+      response = await Maintenance.find(where, projection);
+      return response;
     }
 
     if (all) {

@@ -45,7 +45,6 @@ async function createUser({
 
 async function getUsers({ id, email, all, realEstate, buildingId }) {
   try {
-    console.log(buildingId, 'building id')
     let user = null;
     let searchParams = {};
     if (id) {
@@ -58,8 +57,11 @@ async function getUsers({ id, email, all, realEstate, buildingId }) {
       searchParams.realEstate = realEstate;
     }
     if (buildingId) {
+      let projection = {userName : 1, email: 1, realEstate:1, role:1, contact: 1, userId:1,
+      gender:1, buildingId:1}
+
       searchParams.buildingId = buildingId;
-      user = await User.find(searchParams);
+      user = await User.find(searchParams, projection);
       return user;
     }
     if (all) {
