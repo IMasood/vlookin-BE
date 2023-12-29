@@ -45,6 +45,7 @@ async function login(req, res) {
         role: user.role,
         allowSubUsers: user.allowSubUsers,
         allowMultipleBuildings: user.allowMultipleBuildings,
+        buildingId: user.buildingId
       };  
       auth.createAndSendToken(userData, 200, res);      
     }
