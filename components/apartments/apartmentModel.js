@@ -16,7 +16,7 @@ async function getApartment({all, id, buildingId}) {
   try {
     let where = {}
     let response
-    let projection = {name: 1 , _id: 1, flatNo: 1, floorNo:1}
+    let projection = {name: 1 , _id: 1, flatNo: 1, floorNo:1, available:1, reserved:1}
     if(id){
       where._id = id
     }

@@ -44,7 +44,7 @@ async function getComplaints({all, id, tenantId, buildingId}){
     }
     if(tenantId) {
       console.log(tenantId);
-      where.tenantId._id = tenantId
+      where.tenantId = tenantId
     }
 
     if (buildingId) {
@@ -60,8 +60,7 @@ async function getComplaints({all, id, tenantId, buildingId}){
     }
 
     if(tenantId) {
-      response = await Maintenance.find(tenantId).populate('tenantId', ['tenantName','contact', 'flatNo', 'email']);
-      console.log(response);
+      response = await Maintenance.find(where);
       return response;
     }
 

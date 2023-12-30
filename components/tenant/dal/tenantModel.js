@@ -1,4 +1,5 @@
 let Tenant = require("../model/tenantSchema");
+let Apartment = require('../../apartments/apartmentSchema');
 
 async function create({
   tenantName,
@@ -31,6 +32,14 @@ async function create({
       joiningDate,
       creationDate
     });
+    //updating status of apartments
+    const updatedApartment = await Apartment.findOneAndUpdate({ _id: apartmentId }, { available: false, reserved: true });
+
+    if (updatedApartment) {
+      console.log('Apartment updated successfully!');
+    } else {
+      console.log('Apartment update failed.');
+    }
     return { data: addTenant, status: 200 };
   } catch (err) {
     console.log(err);

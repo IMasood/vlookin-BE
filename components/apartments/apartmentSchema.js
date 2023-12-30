@@ -45,9 +45,11 @@ const apartmentSchema = new mongoose.Schema(
     },
     available: {
       type: Boolean,
+      default: true
     },
-    notAvailable: {
+    reserved: {
       type: Boolean,
+      default:false
     }
   },
   { timestamps: true }

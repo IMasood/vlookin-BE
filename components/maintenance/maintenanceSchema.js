@@ -8,7 +8,11 @@ const maintenance = new mongoose.Schema(
     images: [{ url: String, imageId: String }],
     complaintId: String,
     createdBy: String,
-    tenantId: { type: mongoose.Schema.Types.ObjectId, ref: "TenantModel", required: true },
+    tenantId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "TenantModel", 
+        required: true 
+      },
     status: {
       type: String,
       enum: { values: ["SUBMITTED","HOLD", "IN PROGRESS", "PENDING", "CLOSED"] },
