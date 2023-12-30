@@ -17,6 +17,14 @@ const realEstateSchema = new mongoose.Schema(
     building:{
       type:mongoose.Schema.Types.ObjectId,
       ref: "BuildingModel",
+    },
+    available: {
+      type: Boolean,
+      default: true
+    },
+    reserved: {
+      type: Boolean,
+      default:false
     }
   },
   { timestamps: true }

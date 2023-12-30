@@ -14,10 +14,6 @@ async function addBuilding({
 }) {
 
   try {
-    const realEstate = await RealEstate.findOne({ _id: realEstateId });
-    if (!realEstate) {
-      return res.status(404).json({ message: 'Real Estate not found' });
-    }
     let newBuilding = Building.create({
       buildingName,
       buildingCode,
@@ -27,8 +23,15 @@ async function addBuilding({
       landmark,
       fullName,
       facilities,
-      realEstateId: realEstate._id
+      realEstateId
     });
+    
+    const updateRealEstateStatus = await RealEstate.findOneAndUpdate({ _id: realEstateId }, { available: false, reserved: true });
+    if (updateRealEstateStatus) {
+      console.log('Apartment updated successfully!');
+    } else {
+      console.log('Apartment update failed.');
+    }
     return newBuilding;
   } catch (err) {
     throw err;
