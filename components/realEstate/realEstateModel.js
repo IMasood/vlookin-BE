@@ -51,9 +51,12 @@ async function updateRealEstate({
     throw err;
   }
 }
-async function deleteRealEstate({id}){
+async function deleteRealEstate({id, all}){
   try {
-    
+    if(all) {
+      let response = await RealEstate.deleteMany()
+      return response  
+    }
     let response = await RealEstate.findOneAndDelete({_id: id})
     return response
 

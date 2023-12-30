@@ -70,9 +70,9 @@ async function updateRealEstate(req, res) {
 }
 async function deleteRealEstate(req, res) {
   try {
-    let { id } = req.query;
+    let { id, all } = req.query;
 
-    let deleteRealEstate = await realEstateModel.deleteRealEstate({ id });
+    let deleteRealEstate = await realEstateModel.deleteRealEstate({ id, all });
     return res.status(200).send({
       message: "RealEstate Deleted Succesfully",
       status: 200,
