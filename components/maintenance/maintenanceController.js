@@ -62,7 +62,7 @@ async function addComplaint(req, res) {
 
 async function getComplaints(req, res) {
   try {
-    let { id, all, tenantId } = req.query;
+    let { id, all, tenantId,buildingId } = req.query;
     let data = await maintenanceModel.getComplaints({ id, all, tenantId, buildingId });
     res.status(200).send({
       message: "Successfully fetched complaint.",
