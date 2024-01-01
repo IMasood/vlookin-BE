@@ -60,7 +60,10 @@ async function getTenant({ id, email, buildingId, apartmentId, all }) {
     if (buildingId) {
       let projection = {tenantName : 1, email: 1, realEstate:1, officeNo:1, contact: 1,apartmentId:1,buildingId:1}  
       where.buildingId = buildingId;
-      data = await Tenant.find(where, projection);
+      data = await Tenant.find(where).populate("buildingId", [
+        "buildingName",
+        "buildingCode",
+      ]).populate("apartmentId", ["flatNo"]);
       return data;      
     }
     if (apartmentId && all) {
