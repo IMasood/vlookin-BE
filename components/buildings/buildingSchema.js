@@ -30,7 +30,8 @@ const buildingSchema = new mongoose.Schema(
     facilities : [{type: String}],
     realEstateId:{
       type: String,
-      unique:true
+      unique:true,
+      required:true
     },
     userId:{
       type: mongoose.Schema.Types.ObjectId, 

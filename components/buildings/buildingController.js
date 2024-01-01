@@ -47,7 +47,7 @@ async function createBuilding(req, res) {
 
 async function getBuilding(req, res) {
   try {
-    let { all, id, realEstateId } = req.query;
+    let { all, id, realEstateId, userId } = req.query;
     let result = await buildingModel.getBuilding({ all, id, realEstateId, userId });
 
     res.status(200).send({

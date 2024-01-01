@@ -55,7 +55,8 @@ async function getBuilding({all, id, realEstateId, userId}){
       where.realEstateId = realEstateId
     }
     if(userId){
-      response = await Building.find();
+      where.userId = userId;
+      response = await Building.find(where);
       return response;
     }
     response = await Building.findOne(where)
