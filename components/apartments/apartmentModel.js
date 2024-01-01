@@ -23,7 +23,10 @@ async function getApartment({all, id, buildingId}) {
     if(buildingId){
       where.buildingId = buildingId
     }
-    
+    if(buildingId && all){
+      response = await Apartment.find(where).populate("buildingId", ["buildingName","buildingCode"]);
+      return response
+    }
     if (all) {
       response = await Apartment.find(where).populate("buildingId", ["buildingName","buildingCode"]);
       return response
