@@ -29,7 +29,8 @@ const buildingSchema = new mongoose.Schema(
     },
     facilities : [{type: String}],
     realEstateId:{
-      type: String,
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "RealEstateModel",
       unique:true,
       required:true
     },

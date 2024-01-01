@@ -45,7 +45,7 @@ async function getBuilding({all, id, realEstateId, userId}){
     let where = {};
     let response;
     if (all) {
-      response = await Building.find();
+      response = await Building.find().populate('realEstateId', ['realEstateName']);
       return response;
     }
     if (id) {
@@ -56,10 +56,11 @@ async function getBuilding({all, id, realEstateId, userId}){
     }
     if(userId){
       where.userId = userId;
-      response = await Building.find(where);
+      response = await Building.find(where).populate('realEstateId', ['name']);
       return response;
     }
-    response = await Building.findOne(where)
+
+    response = await Building.findOne(where).populate('realEstateId', ['name']);
     return response
 
   } catch (err) {
