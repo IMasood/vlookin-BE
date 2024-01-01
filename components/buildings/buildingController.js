@@ -15,7 +15,8 @@ async function createBuilding(req, res) {
       landmark,
       fullName,
       facilities,
-     realEstateId
+     realEstateId,
+     userId
     } = req.body;
 
     let buildingCode = code_generator.buildingCode(buildingName);
@@ -28,7 +29,8 @@ async function createBuilding(req, res) {
       landmark,
       fullName,
       facilities,
-     realEstateId
+     realEstateId,
+     userId
     });
     res.status(200).send({
       status: 200,
@@ -46,7 +48,7 @@ async function createBuilding(req, res) {
 async function getBuilding(req, res) {
   try {
     let { all, id, realEstateId } = req.query;
-    let result = await buildingModel.getBuilding({ all, id, realEstateId });
+    let result = await buildingModel.getBuilding({ all, id, realEstateId, userId });
 
     res.status(200).send({
       status: 200,

@@ -10,7 +10,8 @@ async function addBuilding({
   landmark,
   fullName,
   facilities,
-  realEstateId
+  realEstateId,
+  userId
 }) {
 
   try {
@@ -23,7 +24,8 @@ async function addBuilding({
       landmark,
       fullName,
       facilities,
-      realEstateId
+      realEstateId,
+      userId
     });
     
     const updateRealEstateStatus = await RealEstate.findOneAndUpdate({ _id: realEstateId }, { available: false, reserved: true });
@@ -38,7 +40,7 @@ async function addBuilding({
   }
 }
 
-async function getBuilding({all, id, realEstateId}){
+async function getBuilding({all, id, realEstateId, userId}){
   try {
     let where = {};
     let response;
@@ -51,6 +53,10 @@ async function getBuilding({all, id, realEstateId}){
     }
     if(realEstateId){
       where.realEstateId = realEstateId
+    }
+    if(userId){
+      response = await Building.find();
+      return response;
     }
     response = await Building.findOne(where)
     return response

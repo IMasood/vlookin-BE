@@ -31,6 +31,10 @@ const buildingSchema = new mongoose.Schema(
     realEstateId:{
       type: String,
       unique:true
+    },
+    userId:{
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "userModel",
     }
 
   },

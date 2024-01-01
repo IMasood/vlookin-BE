@@ -61,6 +61,7 @@ async function getComplaints({all, id, tenantId, buildingId}){
 
     if(tenantId) {
       response = await Maintenance.find(where);
+      console.log(response.length, 'length')
       return response;
     }
 
@@ -104,8 +105,12 @@ async function updateComplaint({
 }
 async function deleteComplaint({id}){
   try {
-    
-    let response = await Maintenance.findOneAndDelete({_id: id})
+    let response ;
+    if(id){
+      response = await Maintenance.findOneAndDelete({_id: id})
+    }else{
+       response = await Maintenance.deleteMany()
+    }
     return response
 
   } catch (err) {
