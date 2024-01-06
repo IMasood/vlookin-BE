@@ -49,7 +49,7 @@ async function getComplaints({all, id, tenantId, buildingId}){
 
     if (buildingId) {
       where.buildingId = buildingId;
-      let projection = {tenantId : 1, category: 1, status:1, complaintId:1}
+      let projection = {tenantId : 1, category: 1, status:1, complaintId:1, description:1, createdBy:1 }
       response = await Maintenance.find(where, projection);
       return response;
     }
