@@ -42,7 +42,7 @@ async function createVisit(req, res) {
 
 async function getVisit(req, res) {
   try {
-    let { id, visitorName, page = 1, limit = 10 } = req.query;
+    let { id, visitorName, page = 1, limit = 10, buildingId } = req.query;
 
     // Calculate skip and limit values based on the page number and limit
     const skip = (page - 1) * limit;
@@ -52,6 +52,7 @@ async function getVisit(req, res) {
       visitorName,
       limit,
       skip,
+      buildingId
     });
     console.log(fetchVisits);
     res.send({
