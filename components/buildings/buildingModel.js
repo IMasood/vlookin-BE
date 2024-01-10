@@ -53,6 +53,9 @@ async function getBuilding({all, id, realEstateId, userId}){
     }
     if(realEstateId){
       where.realEstateId = realEstateId
+      response = await Building.find(where).populate('realEstateId', ['name']);
+      return response;
+      
     }
     if(userId){
       where.userId = userId;
