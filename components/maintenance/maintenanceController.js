@@ -5,20 +5,16 @@ const { uploadToCloudinary } = require("../../services/media/uploadFile.js");
 
 async function addComplaint(req, res) {
   try {
-    let { category, description, createdBy, tenantId, status, buildingId } = req.body;
+    let { category, description, createdBy, tenantId, status, buildingId,images } = req.body;
     let imageList = [];
-    console.log(req, 'requestttttttttttt')
-    if (req.files) {
-      let { images = [] } = req.files;
-      //upload  images
-      if (images.length) {
-        let imageUploadResult = await uploadImages(images);
-        imageList = imageUploadResult.map((upload) => ({
-          imageId: upload.public_id,
-          url: upload.secure_url,
-        }));
-      }
+    if (images.length) {
+      let imageUploadResult = await uploadImages(images);
+      imageList = imageUploadResult.map((upload) => ({
+        imageId: upload.public_id,
+        url: upload.secure_url,
+      }));
     }
+
     let complaintId;
     let [tenantDetails, complaintCount] = await Promise.all([
       tenantModel.getTenant({ id: tenantId }),
@@ -129,7 +125,7 @@ async function uploadImages(images) {
     let imagesPromises = images.map(
       async (image) =>
         await uploadToCloudinary({
-          filePath: image.path,
+          filePath: image.thumbUrl,
           folder: "Services/Gallery",
         })
     );
