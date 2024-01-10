@@ -10,7 +10,6 @@ const userSchema = new mongoose.Schema(
     },
     realEstate: {
       type: String,
-      required: true,
       unique: true,
     },
     email: {
@@ -74,7 +73,6 @@ const userSchema = new mongoose.Schema(
     },
     buildingId:{
       type: String,
-      required: true,
       unique: true,
     }
   },
