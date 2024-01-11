@@ -49,8 +49,8 @@ async function getComplaints({all, id, tenantId, buildingId}){
 
     if (buildingId) {
       where.buildingId = buildingId;
-      let projection = {tenantId : 1, category: 1, status:1, complaintId:1, description:1, createdBy:1 }
-      response = await Maintenance.find(where, projection);
+      let projection = {tenantId : 1, category: 1, status:1, complaintId:1, description:1, createdBy:1, images:1 }
+      response = await Maintenance.find(where, projection).populate('tenantId', ['tenantName']);
       return response;
     }
 
