@@ -43,7 +43,7 @@ async function createUser({
   }
 }
 
-async function getUsers({ id, email, all, realEstate, buildingId }) {
+async function getUsers({ id, email, all, realEstate, buildingId,role }) {
   try {
     let user = null;
     let searchParams = {};
@@ -56,10 +56,13 @@ async function getUsers({ id, email, all, realEstate, buildingId }) {
     if (realEstate) {
       searchParams.realEstate = realEstate;
     }
-    if (buildingId) {
+    if (buildingId || buildingId && role) {
       let projection = {userName : 1, email: 1, realEstate:1, role:1, contact: 1, userId:1,
       gender:1, buildingId:1}
       searchParams.buildingId = buildingId;
+      if(role){
+        searchParams.role = role;
+      }
       user = await User.find(searchParams, projection);
       return user;
     }
