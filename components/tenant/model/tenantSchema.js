@@ -18,12 +18,11 @@ const tenantSchema = new mongoose.Schema(
     buildingId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "BuildingModel",
-      exists: true,
+      // exists: true,
       required: true,
     },
     apartmentId: {
       exists: true,
-      unique: true,
       required: true,
       type: mongoose.Schema.Types.ObjectId,
       ref: "ApartmentModel",
