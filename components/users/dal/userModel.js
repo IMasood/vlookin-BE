@@ -55,15 +55,17 @@ async function getUsers({ id, email, all, realEstate, buildingId,role }) {
     }
     if (realEstate) {
       searchParams.realEstate = realEstate;
-      user = await User.find(searchParams);
-      return user;
     }
-    if (buildingId || buildingId && role) {
-      let projection = {userName : 1, email: 1, realEstate:1, role:1, contact: 1, userId:1,
-      gender:1, buildingId:1}
-      searchParams.buildingId = buildingId;
+    if (buildingId || buildingId && role || realEstate && role) {
+      let projection = {userName : 1, email: 1, realEstate:1, role:1, contact: 1, userId:1,gender:1, buildingId:1}
+      if(buildingId){
+        searchParams.buildingId = buildingId;
+      }
       if(role){
         searchParams.role = role;
+      }
+      if(realEstate){
+        searchParams.realEstate = realEstate;
       }
       user = await User.find(searchParams, projection);
       return user;
