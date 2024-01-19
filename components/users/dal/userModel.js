@@ -55,7 +55,7 @@ async function getUsers({ id, email, all, realEstate, buildingId,role }) {
     }
     if (realEstate) {
       searchParams.realEstate = realEstate;
-      user = await User.find(searchParams, projection);
+      user = await User.find(searchParams);
       return user;
     }
     if (buildingId || buildingId && role) {
