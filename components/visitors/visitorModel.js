@@ -87,9 +87,13 @@ async function updateVisit({
   }
 }
 
-async function deleteVisit({ id }) {
+async function deleteVisit({ id, all }) {
   try {
-    let response = await Visitor.findOneAndDelete({ _id: id });
+    let response
+    if (all) {
+       response = await Visitor.deleteMany();
+    }
+     response = await Visitor.findOneAndDelete({ _id: id });
     return response;
   } catch (err) {
     throw err;

@@ -88,9 +88,13 @@ async function updateReceipt({
     throw err;
   }
 }
-async function deleteReceipt({ id }) {
+async function deleteReceipt({ id,all }) {
   try {
-    let response = await Receipt.findOneAndDelete({ _id: id });
+    let response 
+    if (all) {
+      response = await Receipt.deleteMany();
+   }
+     response = await Receipt.findOneAndDelete({ _id: id });
     return response;
   } catch (err) {
     throw err;

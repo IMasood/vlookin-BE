@@ -83,7 +83,12 @@ async function updateApartment({
 }
 async function deleteApartment({ id }) {
   try {
-    let response = await Apartment.findOneAndDelete({ _id: id });
+    let response
+    if(id){
+      response = await Apartment.findOneAndDelete({ _id: id });
+    }else{
+      response = await Apartment.deleteMany();
+    }
     return response;
   } catch (err) {
     throw err;

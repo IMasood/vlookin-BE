@@ -144,8 +144,8 @@ async function updateTenant(req, res) {
 
 async function deleteTenant(req, res) {
   try {
-    let id = req.query;
-    let result = await tenantModel.deleteTenant(id);
+    let {id, all} = req.query;
+    let result = await tenantModel.deleteTenant({id, all});
     res.status(200).send({
       status: 200,
       message: "Tenant Successfully Deleted",

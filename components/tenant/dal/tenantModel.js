@@ -128,9 +128,13 @@ async function updateTenant({
   }
 }
 
-async function deleteTenant({ id }) {
+async function deleteTenant({ id, all }) {
   try {
-    let response = await Tenant.findOneAndDelete({
+    let response 
+    if (all) {
+      response = await Tenant.deleteMany();
+   }
+     response = await Tenant.findOneAndDelete({
       _id: id,
     });
     return response;

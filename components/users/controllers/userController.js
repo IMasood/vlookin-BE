@@ -152,8 +152,8 @@ async function updateUser(req, res) {
 
 async function deleteUser(req, res) {
   try {
-    let id = req.query;
-    let result = await userModel.deleteUser(id);
+    let {id, all} = req.query;
+    let result = await userModel.deleteUser({id, all});
     res.status(200).send({
       status: 200,
       message: "User Successfully Deleted",

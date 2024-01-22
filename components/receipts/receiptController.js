@@ -101,9 +101,9 @@ async function updateReceipt(req, res) {
 }
 async function deleteReceipt(req, res) {
   try {
-    let { id } = req.query;
+    let { id,all } = req.query;
 
-    let deleteReceipt = await receiptModel.deleteReceipt({ id });
+    let deleteReceipt = await receiptModel.deleteReceipt({ id,all });
     return res.status(200).send({
       message: "Receipt Deleted Successfully",
       status: 200,

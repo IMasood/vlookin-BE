@@ -128,9 +128,13 @@ async function updateUser({
   }
 }
 
-async function deleteUser({ id }) {
+async function deleteUser({ id,all }) {
   try {
-    let response = await User.findOneAndDelete({ _id: id });
+    let response 
+    if (all) {
+      response = await User.deleteMany();
+   }
+    response = await User.findOneAndDelete({ _id: id });
     return response;
   } catch (err) {
     throw err;

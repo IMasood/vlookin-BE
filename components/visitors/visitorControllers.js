@@ -123,10 +123,10 @@ async function updateVisit(req, res) {
 
 async function deleteVisit(req, res) {
   try {
-    let { id } = req.query;
+    let { id, all } = req.query;
 
 
-    let result = await visitorModel.deleteVisit({ id });
+    let result = await visitorModel.deleteVisit({ id,all });
 
     if (result === null) {
       res.status(404).send({

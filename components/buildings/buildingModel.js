@@ -102,7 +102,12 @@ async function updateBuilding({
 async function deleteBuilding({id}){
   try {
     
-    let response = await Building.findOneAndDelete({_id: id})
+    let response 
+    if(id) {
+      response = await Building.findOneAndDelete({_id: id})
+    }else{
+      response = await Building.deleteMany()
+   }
     return response
 
   } catch (err) {
