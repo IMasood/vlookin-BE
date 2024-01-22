@@ -24,6 +24,8 @@ async function login(req, res) {
           email: tenant?.email,
           contact: tenant?.contact,
           role: 'tenant',
+        allowAMS:user.allowAMS
+
         };  
         auth.createAndSendToken(tenantData, 200, res);        
     }
@@ -45,7 +47,8 @@ async function login(req, res) {
         role: user.role,
         allowSubUsers: user.allowSubUsers,
         allowMultipleBuildings: user.allowMultipleBuildings,
-        buildingId: user.buildingId
+        buildingId: user.buildingId,
+        allowAMS:user.allowAMS
       };  
       auth.createAndSendToken(userData, 200, res);      
     }
