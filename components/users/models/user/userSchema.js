@@ -9,8 +9,8 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     realEstate: {
-      type: String,
-      unique: true,
+      type: String
+      // unique: true,
     },
     email: {
       type: String,
