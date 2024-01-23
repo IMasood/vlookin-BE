@@ -73,7 +73,7 @@ const userSchema = new mongoose.Schema(
     },
     buildingId:{
       type: String,
-      unique: true,
+      // unique: true,
     }
   },
   { timestamps: true }
