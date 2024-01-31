@@ -17,15 +17,14 @@ async function login(req, res) {
     let tenant;
     if(role == 'tenant'){
         tenant = await tenantModel.getTenant({email});
+        console.log(tenant, 'tenant')
         const tenantData = {
           id: tenant?._id,
           userName: tenant?.tenantName,
           status: tenant?.status,
           email: tenant?.email,
           contact: tenant?.contact,
-          role: 'tenant',
-        allowAMS:user.allowAMS
-
+          role: 'tenant'
         };  
         auth.createAndSendToken(tenantData, 200, res);        
     }
