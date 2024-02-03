@@ -7,13 +7,13 @@ async function addComplaint(req, res) {
   try {
     let { category, description, createdBy, tenantId, status, buildingId,images } = req.body;
     let imageList = [];
-    if (images.length) {
-      let imageUploadResult = await uploadImages(images);
-      imageList = imageUploadResult.map((upload) => ({
-        imageId: upload.public_id,
-        url: upload.secure_url,
-      }));
-    }
+    // if (images.length) {
+    //   let imageUploadResult = await uploadImages(images);
+    //   imageList = imageUploadResult.map((upload) => ({
+    //     imageId: upload.public_id,
+    //     url: upload.secure_url,
+    //   }));
+    // }
 
     let complaintId;
     let [tenantDetails, complaintCount] = await Promise.all([
@@ -120,12 +120,14 @@ async function deleteComplaint(req, res) {
   }
 }
 
-async function uploadImages(images) {
+async function uploadImages(req, res) {
   try {
+    let { images = [] } = req.files;
+    console.log(images, 'imagesssssssssss')
     let imagesPromises = images.map(
       async (image) =>
         await uploadToCloudinary({
-          filePath: image.thumbUrl,
+          filePath: image.thumbUrl || image.filename,
           folder: "Services/Gallery",
         })
     );
@@ -140,4 +142,5 @@ module.exports = {
   getComplaints,
   updateComplaint,
   deleteComplaint,
+  uploadImages
 };

@@ -8,5 +8,6 @@ router.post('/addComplaint', maintenanceController.addComplaint)
 router.get('/getComplaint', maintenanceController.getComplaints)
 router.patch('/updateComplaint', maintenanceController.updateComplaint)
 router.delete('/deleteComplaint', maintenanceController.deleteComplaint)
+router.post('/uploadImage', uploadFiles([{name: "images", maxCount: 10 }]), maintenanceController.uploadImages)
 
 module.exports = router
