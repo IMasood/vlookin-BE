@@ -6,15 +6,6 @@ const { uploadToCloudinary } = require("../../services/media/uploadFile.js");
 async function addComplaint(req, res) {
   try {
     let { category, description, createdBy, tenantId, status, buildingId,images } = req.body;
-    let imageList = [];
-    // if (images.length) {
-    //   let imageUploadResult = await uploadImages(images);
-    //   imageList = imageUploadResult.map((upload) => ({
-    //     imageId: upload.public_id,
-    //     url: upload.secure_url,
-    //   }));
-    // }
-
     let complaintId;
     let [tenantDetails, complaintCount] = await Promise.all([
       tenantModel.getTenant({ id: tenantId }),
@@ -39,7 +30,7 @@ async function addComplaint(req, res) {
       tenantId,
       complaintId,
       status,
-      imageList,
+      images,
       buildingId
     });
 
@@ -122,19 +113,31 @@ async function deleteComplaint(req, res) {
 
 async function uploadImages(req, res) {
   try {
-    let { images = [] } = req.files;
-    console.log(images, 'imagesssssssssss')
-    let imagesPromises = images.map(
+    let { file = [] } = req.files;
+   let imageList = [];
+    let imagesPromises = file.map(
       async (image) =>
         await uploadToCloudinary({
-          filePath: image.thumbUrl || image.filename,
+          filePath: image.thumbUrl ? image.thumbUrl : image.path,
           folder: "Services/Gallery",
         })
     );
-    let imageUploadResponse = Promise.all(imagesPromises);
-    return imageUploadResponse;
+    let imageUploadResponse = await Promise.all(imagesPromises);
+    imageList = imageUploadResponse.map((upload) => ({
+      imageId: upload.public_id,
+      url: upload.url,
+    }));
+    return res.status(200).send({
+      message: "Images uploaded Succesfully",
+      status: 200,
+      data: imageList,
+    });
   } catch (error) {
-    throw error;
+    res.status(500).send({
+      message: "Couldn't upload",
+      error: error.message,
+      status: 500,
+    });
   }
 }
 module.exports = {

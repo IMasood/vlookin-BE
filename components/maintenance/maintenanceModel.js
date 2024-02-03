@@ -7,7 +7,7 @@ async function addComplaint({
     createdBy,
     tenantId,
     status,
-    imageList,
+    images,
     buildingId
 }) {
   try {
@@ -18,7 +18,7 @@ async function addComplaint({
       createdBy,
       tenantId,
       status,
-      images: imageList,
+      images,
       buildingId
     });
     return newComplaint;
