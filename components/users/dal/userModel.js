@@ -38,8 +38,14 @@ async function createUser({
     console.log(create);
     return create;
   } catch (error) {
+    console.log(error)
     if (error.code === 11000) {
-      throw('UserId must be unique');
+      if(error.keyValue.userId){
+        throw('UserId must be unique');
+      }
+      if(error.keyValue.email){
+        throw('Email must be unique');
+      }
     } else {
       throw ('Failed to create superadmin');
     }

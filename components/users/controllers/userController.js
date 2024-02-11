@@ -68,11 +68,10 @@ async function createUser(req, res) {
       });
     }
   } catch (error) {
-    console.log(error.message);
     res.status(500).send({
       success: false,
       data: null,
-      message: "Failed to create user",
+      message: error ? error : "Failed to create user",
     });
   }
 }
