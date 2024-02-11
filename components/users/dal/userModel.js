@@ -37,8 +37,12 @@ async function createUser({
     });
     console.log(create);
     return create;
-  } catch (err) {
-    throw ('Failed to create superadmin');
+  } catch (error) {
+    if (error.code === 11000) {
+      throw('UserId must be unique');
+    } else {
+      throw ('Failed to create superadmin');
+    }
   }
 }
 
