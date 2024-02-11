@@ -72,7 +72,7 @@ async function createUser(req, res) {
     res.status(500).send({
       success: false,
       data: null,
-      message: "Failed to create user" + error.message,
+      message: "Failed to create user",
     });
   }
 }

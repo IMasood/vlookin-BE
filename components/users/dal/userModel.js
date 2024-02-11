@@ -38,8 +38,7 @@ async function createUser({
     console.log(create);
     return create;
   } catch (err) {
-    console.log("User creation failed", err.message);
-    throw err;
+    throw ('Failed to create superadmin');
   }
 }
 
