@@ -32,14 +32,14 @@ async function createUser(req, res) {
         message: "Invalid email or contact format",
       });
     }
-    let userExists = await userModel.getUsers({ email });
+    let userExists = await userModel.getUsers({ email, userId});
 
     console.log(userExists);
 
     if (userExists) {
       return res.status(409).send({
         success: false,
-        message: "User with an email already exist",
+        message: "User with an email or Id already exist",
       });
     }
     let emailVerificationOTP = await code_generator.OTP_generator();
@@ -79,7 +79,7 @@ async function createUser(req, res) {
 
 async function getUsers(req, res) {
   try {
-    let { id, all, email, name, realEstate,buildingId, role } = req.query;
+    let { id, all, email, name, realEstate,buildingId, role, userId } = req.query;
     let userData = await userModel.getUsers({
       id,
       all,
@@ -87,7 +87,8 @@ async function getUsers(req, res) {
       name,
       realEstate,
       buildingId,
-      role
+      role,
+      userId
     });
     res.send({
       status: 200,

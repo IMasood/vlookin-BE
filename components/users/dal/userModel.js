@@ -43,7 +43,7 @@ async function createUser({
   }
 }
 
-async function getUsers({ id, email, all, realEstate, buildingId,role }) {
+async function getUsers({ id, email, all, realEstate, buildingId,role, userId }) {
   try {
     let user = null;
     let searchParams = {};
@@ -52,6 +52,9 @@ async function getUsers({ id, email, all, realEstate, buildingId,role }) {
     }
     if (email) {
       searchParams.email = email;
+    }
+    if(userId) {
+      searchParams.userId = userId;
     }
     if (realEstate) {
       searchParams.realEstate = realEstate;
