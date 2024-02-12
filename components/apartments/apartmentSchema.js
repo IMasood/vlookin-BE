@@ -10,6 +10,7 @@ const apartmentSchema = new mongoose.Schema(
     },
     flatNo: {
       type: String,
+      required: true,
     },
     apartmentType: {
       type: String,
@@ -42,6 +43,14 @@ const apartmentSchema = new mongoose.Schema(
     comments: {
       type: String,
     },
+    available: {
+      type: Boolean,
+      default: true
+    },
+    reserved: {
+      type: Boolean,
+      default:false
+    }
   },
   { timestamps: true }
 );

@@ -1,4 +1,5 @@
 const Building = require("./buildingSchema");
+const RealEstate = require("../realEstate/realEstateSchema");
 
 async function addBuilding({
   buildingName,
@@ -8,8 +9,11 @@ async function addBuilding({
   watchman,
   landmark,
   fullName,
-  facilities
+  facilities,
+  realEstateId,
+  userId
 }) {
+
   try {
     let newBuilding = Building.create({
       buildingName,
@@ -20,26 +24,46 @@ async function addBuilding({
       landmark,
       fullName,
       facilities,
+      realEstateId,
+      userId
     });
-
+    
+    const updateRealEstateStatus = await RealEstate.findOneAndUpdate({ _id: realEstateId }, { available: false, reserved: true });
+    if (updateRealEstateStatus) {
+      console.log('Apartment updated successfully!');
+    } else {
+      console.log('Apartment update failed.');
+    }
     return newBuilding;
   } catch (err) {
     throw err;
   }
 }
 
-async function getBuilding({all, id}){
+async function getBuilding({all, id, realEstateId, userId}){
   try {
     let where = {};
     let response;
     if (all) {
-      response = await Building.find();
+      response = await Building.find().populate('realEstateId', ['realEstateName']);
       return response;
     }
     if (id) {
       where._id = id;
     }
-    response = await Building.findOne(where)
+    if(realEstateId){
+      where.realEstateId = realEstateId
+      response = await Building.find(where).populate('realEstateId', ['name']);
+      return response;
+      
+    }
+    if(userId){
+      where.userId = userId;
+      response = await Building.find(where).populate('realEstateId', ['name']);
+      return response;
+    }
+
+    response = await Building.findOne(where).populate('realEstateId', ['name']);
     return response
 
   } catch (err) {
@@ -78,7 +102,12 @@ async function updateBuilding({
 async function deleteBuilding({id}){
   try {
     
-    let response = await Building.findOneAndDelete({_id: id})
+    let response 
+    if(id) {
+      response = await Building.findOneAndDelete({_id: id})
+    }else{
+      response = await Building.deleteMany()
+   }
     return response
 
   } catch (err) {

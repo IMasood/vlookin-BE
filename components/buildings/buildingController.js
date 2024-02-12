@@ -1,5 +1,10 @@
 const buildingModel = require("./buildingModel");
 const code_generator = require("../../services/code_generator");
+const apartmentModel = require("../apartments/apartmentModel");
+const maintenanceModel = require("../maintenance/maintenanceModel")
+const userModel = require("../users/dal/userModel.js");
+const TenantModel = require("../tenant/dal/tenantModel");
+
 async function createBuilding(req, res) {
   try {
     let {
@@ -10,6 +15,8 @@ async function createBuilding(req, res) {
       landmark,
       fullName,
       facilities,
+     realEstateId,
+     userId
     } = req.body;
 
     let buildingCode = code_generator.buildingCode(buildingName);
@@ -22,14 +29,16 @@ async function createBuilding(req, res) {
       landmark,
       fullName,
       facilities,
+     realEstateId,
+     userId
     });
-    res.send({
+    res.status(200).send({
       status: 200,
       message: "building successfully added",
       data: newBuilding,
     });
   } catch (err) {
-    res.send({
+    res.status(500).send({
       status: 500,
       message: err.message,
     });
@@ -38,8 +47,8 @@ async function createBuilding(req, res) {
 
 async function getBuilding(req, res) {
   try {
-    let { all, id } = req.query;
-    let result = await buildingModel.getBuilding({ all, id });
+    let { all, id, realEstateId, userId } = req.query;
+    let result = await buildingModel.getBuilding({ all, id, realEstateId, userId });
 
     res.status(200).send({
       status: 200,
@@ -53,6 +62,8 @@ async function getBuilding(req, res) {
     });
   }
 }
+
+
 async function updateBuilding(req, res) {
   try {
     let { id } = req.query;
@@ -89,6 +100,7 @@ async function updateBuilding(req, res) {
     });
   }
 }
+
 async function deleteBuilding(req, res) {
   try {
     let { id } = req.query;
@@ -108,9 +120,42 @@ async function deleteBuilding(req, res) {
   }
 }
 
+async function getSelectedBuildingDetails(req, res){
+  try{
+    let {buildingId} = req.query;
+    // const visitors = 
+    let apartment = await apartmentModel.getApartment({ buildingId });
+    let users = await userModel.getUsers({buildingId});
+    const tenants = await TenantModel.getTenant({buildingId});
+    const maintenance = users.filter(user => user.role === 'maintenance');
+    const visitors = users.filter(user => user.role === 'visitor');
+    let complaints = await maintenanceModel.getComplaints({buildingId});
+    let data = {
+      'apartments' : apartment,
+      'tenants' : tenants,
+      'visitors' : visitors,
+      'maintenance' : maintenance,
+      'complaints' : complaints
+    };
+    return res.status(200).send({
+      message: "Building Details Fetched Succesfully",
+      status: 200,
+      data: data,
+    });
+
+  }catch(err) {
+    res.status(500).send({
+      message: "Delete failed",
+      error: err.message,
+      status: 500,
+    });
+  }
+}
+
 module.exports = {
   createBuilding,
   getBuilding,
   updateBuilding,
   deleteBuilding,
+  getSelectedBuildingDetails
 };

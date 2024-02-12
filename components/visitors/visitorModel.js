@@ -34,7 +34,7 @@ async function createVisit({
   }
 }
 
-async function getVisit({ id, visitorName, skip, limit }) {
+async function getVisit({ id, visitorName, skip, limit, buildingId }) {
   try {
     let where = {};
     if (id) {
@@ -42,6 +42,9 @@ async function getVisit({ id, visitorName, skip, limit }) {
     }
     if (visitorName) {
       where.visitorName = visitorName;
+    }
+    if (buildingId) {
+      where.buildingName = buildingId;
     }
     console.log(where);
     let visitorData = await Visitor.find(where);
@@ -84,9 +87,13 @@ async function updateVisit({
   }
 }
 
-async function deleteVisit({ id }) {
+async function deleteVisit({ id, all }) {
   try {
-    let response = await Visitor.findOneAndDelete({ _id: id });
+    let response
+    if (all) {
+       response = await Visitor.deleteMany();
+    }
+     response = await Visitor.findOneAndDelete({ _id: id });
     return response;
   } catch (err) {
     throw err;

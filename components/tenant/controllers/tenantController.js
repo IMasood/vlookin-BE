@@ -3,19 +3,26 @@ const code_generator = require("../../../services/code_generator");
 const htmlTemplate = require("../../../services/emails/templates/otp");
 const sendMail = require("../../../services/emails/email");
 const sendSMS = require("../../../services/sms/sms");
-const OTP_EXPIRE_TIME = 2; //Minutes
+const OTP_EXPIRE_TIME = 5; //Minutes
+const moment = require("moment");
 
 async function createTenant(req, res) {
   try {
     let {
       tenantName,
+      password,
       email,
       buildingId,
-      flatNo,
+      apartmentId,
       contact,
       officeNo,
       nationality,
+      createdBy,
+      joiningDate,
+      creationDate    
+      
     } = req.body;
+    console.log(req.body, 'requestttttttt')
 
     let emailReg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
     let contactRegex = /^(?:\+971|0)(?:\d{1,2})?\d{7}$/;
@@ -28,22 +35,26 @@ async function createTenant(req, res) {
 
     //creating and sending OTP
     let emailVerificationOTP = await code_generator.OTP_generator();
-    let OTP_Expiry = Date.now() + OTP_EXPIRE_TIME * 60 * 1000;
+    let OTP_Expiry = moment().add(OTP_EXPIRE_TIME, "minutes");
     let response = await tenantModel.create({
       tenantName,
       email,
+      password,
       buildingId,
-      flatNo,
+      apartmentId,
       contact,
       officeNo,
       nationality,
+      createdBy,
       OTP: emailVerificationOTP.hashedOTP,
       OTP_Expiry,
+      joiningDate,
+      creationDate    
     });
 
     if (response.status == 200) {
       let html = htmlTemplate.otp_email({ otp: emailVerificationOTP.OTP_Code });
-      // let sendEmailResponse = await sendMail.sendEmail({ html, to: email });
+      let sendEmailResponse = await sendMail.sendEmail({ html, to: email });
       // let sendSMSResponse = await sendSMS.send_otp_sms({
       //   otp: emailVerificationOTP.OTP_Code,
       //   // sms_contact: [contact],SMS Sending Temporarily disabled due to development environment
@@ -55,6 +66,7 @@ async function createTenant(req, res) {
       });
     }
   } catch (err) {
+    console.log(err);
     res.status(500).send({
       message: ("Failed to add Tenant", err.message),
       status: 500,
@@ -64,8 +76,14 @@ async function createTenant(req, res) {
 
 async function getTenant(req, res) {
   try {
-    let { id, email, all } = req.query;
-    let response = await tenantModel.getTenant({ id, email, all });
+    let { id, email, buildingId, apartmentId,  all } = req.query;
+    let response = await tenantModel.getTenant({
+      id,
+      email,
+      buildingId,
+      apartmentId,
+      all,
+    });
     console.log(response);
     if (response) {
       res.status(200).send({
@@ -89,20 +107,22 @@ async function updateTenant(req, res) {
     let {
       tenantName,
       email,
-      buildingName,
+      buildingId,
+      apartmentId,
       flatNo,
       contact,
       officeNo,
       nationality,
     } = req.body;
 
-    let id = req.query;
+    let { id } = req.query;
 
     let response = await tenantModel.updateTenant({
       id,
       tenantName,
       email,
-      buildingName,
+      buildingId,
+      apartmentId,
       flatNo,
       contact,
       officeNo,
@@ -124,8 +144,8 @@ async function updateTenant(req, res) {
 
 async function deleteTenant(req, res) {
   try {
-    let id = req.query;
-    let result = await tenantModel.deleteTenant(id);
+    let {id, all} = req.query;
+    let result = await tenantModel.deleteTenant({id, all});
     res.status(200).send({
       status: 200,
       message: "Tenant Successfully Deleted",
@@ -141,13 +161,16 @@ async function deleteTenant(req, res) {
 
 async function verifyOTP(req, res) {
   try {
-    let { tenantId, OTP } = req.body;
+    let { id, OTP } = req.query;
     //Get merchant
-    let tenant = await tenantModel.getTenant({ tenantId });
+    let tenant = await tenantModel.getTenant({ id });
+    if (tenant.OTP_Verified === true) {
+      throw Error ("OTP Already Verified")
+    }
     //Validate OTP expiration time
     let isOTPValid = moment().isBefore(tenant?.OTP_Expiry);
     let isOTPMatched = await tenant.compareEmailVerificationOTP(OTP);
-
+    console.log('otpssssssssssssssssssssssss', isOTPMatched, isOTPMatched)
     if (!isOTPValid || !isOTPMatched) {
       return res.status(401).send({
         success: false,
@@ -156,13 +179,14 @@ async function verifyOTP(req, res) {
     } else if (isOTPValid && isOTPMatched) {
       //If OTP is matched update email status to verified
       let result = await tenantModel.updateTenant({
-        id: tenantId,
+        id ,
         OTP_Verified: true,
       });
-      if (result.modifiedCount) {
-        res
-          .status(200)
-          .send({ success: true, message: "Email verified successfully" });
+      console.log(result, 'ress')
+      if (result?.OTP_Verified) {
+        console.log('iffffff')
+
+        res.status(200).send({ success: true, message: "Email verified successfully" });
       }
     }
   } catch (err) {
@@ -176,11 +200,11 @@ async function verifyOTP(req, res) {
 
 async function resendOTP(req, res) {
   try {
-    let { tenantId } = req.body;
+    let {id} = req.query;
     let emailVerificationOTP = await code_generator.OTP_generator();
-    let OTP_Expiry = Date.now() + OTP_EXPIRE_TIME * 60 * 1000;
+    let OTP_Expiry = moment().add(OTP_EXPIRE_TIME, "minutes");
     let responseOfUpdateOTP = await tenantModel.updateTenant({
-      id: tenantId,
+      id,
       OTP: emailVerificationOTP.hashedOTP,
       OTP_Expiry,
     });
@@ -188,18 +212,20 @@ async function resendOTP(req, res) {
       let html = htmlTemplate.otp_email({
         otp: emailVerificationOTP.OTP_Code,
       });
-      let sendEmailResponse = await sendMail.sendEmail({ html, to: email });
-      let sendSMSResponse = await sendSMS.send_otp_sms({
-        otp: emailVerificationOTP.OTP_Code,
-        // sms_contact: [contact],SMS Sending Temporarily disabled due to development environment
+      let sendEmailResponse = await sendMail.sendEmail({
+        html,
+        to: responseOfUpdateOTP.email,
       });
+      // let sendSMSResponse = await sendSMS.send_otp_sms({
+      //   otp: emailVerificationOTP.OTP_Code,
+      //   // sms_contact: [contact],SMS Sending Temporarily disabled due to development environment
+      // });
     
       res.status(200).send({
         message: "OTP Resent successfully",
         status: 200,
       });
     }
-    let;
   } catch (err) {
     res.status(500).send({
       success: false,

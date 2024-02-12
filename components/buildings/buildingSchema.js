@@ -27,7 +27,18 @@ const buildingSchema = new mongoose.Schema(
     landmark: {
       type: String,
     },
-    facilities : [{type: String}]
+    facilities : [{type: String}],
+    realEstateId:{
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "RealEstateModel",
+      unique:true,
+      required:true
+    },
+    userId:{
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "userModel",
+    }
+
   },
   { timestamps: true }
 );

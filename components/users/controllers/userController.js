@@ -1,5 +1,10 @@
 const userModel = require("../dal/userModel");
 const auth = require("../../../middleware/authMiddleware");
+const code_generator = require("../../../services/code_generator.js");
+const htmlTemplate = require("../../../services/emails/templates/otp");
+const sendMail = require("../../../services/emails/email");
+const OTP_EXPIRE_TIME = 5; //minutes
+const moment = require("moment");
 
 async function createUser(req, res) {
   try {
@@ -11,29 +16,34 @@ async function createUser(req, res) {
       role,
       allowSubUsers,
       allowMultipleBuildings,
+      allowAMS,
       gender,
       userId,
+      createdBy,
+      realEstate,
+      buildingId
     } = req.body;
 
     let emailReg = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
-    let contactRegex = /^(?:\+971|0)(?:\d{1,2})?\d{7}$/
+    let contactRegex = /^(?:\+971|0)(?:\d{1,2})?\d{7}$/;
 
     if (!emailReg.test(email) || !contactRegex.test(contact)) {
       return res.status(400).send({
         message: "Invalid email or contact format",
       });
     }
-    let userExists = await userModel.getUsers({ email });
+    let userExists = await userModel.getUsers({ email, userId});
 
     console.log(userExists);
 
     if (userExists) {
       return res.status(409).send({
         success: false,
-        message: "User with an email already exist",
+        message: "User with an email or Id already exist",
       });
     }
-
+    let emailVerificationOTP = await code_generator.OTP_generator();
+    let OTP_Expiry = moment().add(OTP_EXPIRE_TIME, "minutes");
     let userCreated = await userModel.createUser({
       userName,
       email,
@@ -42,28 +52,43 @@ async function createUser(req, res) {
       role,
       allowSubUsers,
       allowMultipleBuildings,
+      allowAMS,
       gender,
       userId,
+      createdBy,
+      OTP: emailVerificationOTP.hashedOTP,
+      OTP_Expiry,
+      realEstate,
+      buildingId
     });
-
-    res.status(200).send({
-      success: true,
-      message: "User created successfully",
-    });
+    if (userCreated) {
+      res.status(200).send({
+        success: true,
+        message: "User created successfully",
+      });
+    }
   } catch (error) {
-    console.log(error.message);
     res.status(500).send({
       success: false,
       data: null,
-      message: "Failed to create user",
+      message: error ? error : "Failed to create user",
     });
   }
 }
 
 async function getUsers(req, res) {
   try {
-    let { id, all, email, name } = req.query;
-    let userData = await userModel.getUsers({ id, all, email, name });
+    let { id, all, email, name, realEstate,buildingId, role, userId } = req.query;
+    let userData = await userModel.getUsers({
+      id,
+      all,
+      email,
+      name,
+      realEstate,
+      buildingId,
+      role,
+      userId
+    });
     res.send({
       status: 200,
       message: "Data fetched successfully",
@@ -87,11 +112,12 @@ async function updateUser(req, res) {
       role,
       allowSubUsers,
       allowMultipleBuildings,
+      allowAMS,
       gender,
       userId,
     } = req.body;
 
-    let id = req.query;
+    let { id } = req.query;
 
     let response = await userModel.updateUser({
       id,
@@ -104,6 +130,7 @@ async function updateUser(req, res) {
       allowMultipleBuildings,
       gender,
       userId,
+      allowAMS,
     });
 
     if (response !== null) {
@@ -125,8 +152,8 @@ async function updateUser(req, res) {
 
 async function deleteUser(req, res) {
   try {
-    let id = req.query;
-    let result = await userModel.deleteUser(id);
+    let {id, all} = req.query;
+    let result = await userModel.deleteUser({id, all});
     res.status(200).send({
       status: 200,
       message: "User Successfully Deleted",
@@ -140,9 +167,86 @@ async function deleteUser(req, res) {
   }
 }
 
+async function verifyOTP(req, res) {
+  try {
+    let { id, OTP } = req.query;
+    //Get merchant
+    let user = await userModel.getUsers({ id });
+    if (user.OTP_Verified === true) {
+      throw Error("OTP Already Verified");
+    }
+    //Validate OTP expiration time
+    let isOTPValid = moment().isBefore(user?.OTP_Expiry);
+    let isOTPMatched = await user.compareEmailVerificationOTP(OTP);
+
+    if (!isOTPValid || !isOTPMatched) {
+      return res.status(401).send({
+        success: false,
+        message: "Invalid or expired OTP",
+      });
+    } else if (isOTPValid && isOTPMatched) {
+      //If OTP is matched update email status to verified
+      let result = await userModel.updateUser({
+        id,
+        OTP_Verified: true,
+      });
+      if (result.OTP_Verified === true) {
+        res
+          .status(200)
+          .send({ success: true, message: "Email verified successfully" });
+      }
+    }
+  } catch (err) {
+    res.status(500).send({
+      success: false,
+      message: "OTP verification failed",
+      error: err.message,
+    });
+  }
+}
+
+async function resendOTP(req, res) {
+  try {
+    let { id } = req.query;
+    let emailVerificationOTP = await code_generator.OTP_generator();
+    let OTP_Expiry = moment().add(OTP_EXPIRE_TIME, "minutes");
+    let responseOfUpdateOTP = await userModel.updateUser({
+      id,
+      OTP: emailVerificationOTP.hashedOTP,
+      OTP_Expiry,
+    });
+    if (responseOfUpdateOTP !== null) {
+      let html = htmlTemplate.otp_email({
+        otp: emailVerificationOTP.OTP_Code,
+      });
+      let sendEmailResponse = await sendMail.sendEmail({
+        html,
+        to: responseOfUpdateOTP.email,
+      });
+      // let sendSMSResponse = await sendSMS.send_otp_sms({
+      //   otp: emailVerificationOTP.OTP_Code,
+      //   // sms_contact: [contact],SMS Sending Temporarily disabled due to development environment
+      // });
+
+      res.status(200).send({
+        message: "OTP Resent successfully",
+        status: 200,
+      });
+    }
+  } catch (err) {
+    res.status(500).send({
+      success: false,
+      message: "OTP resend failed",
+      error: err.message,
+    });
+  }
+}
+
 module.exports = {
   createUser,
   getUsers,
   updateUser,
   deleteUser,
+  verifyOTP,
+  resendOTP,
 };
